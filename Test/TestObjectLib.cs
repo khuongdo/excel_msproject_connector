@@ -13,7 +13,7 @@ namespace Test
     {
         public class TestDatabase
         {
-            public MSPTask Task1 = new MSPTask()
+            public static MSPTask Task1 = new MSPTask()
             {
                 Name = "Task1",
                 Mode = TaskMode.AutoSchedule,
@@ -27,7 +27,7 @@ namespace Test
                 },
                 Predeccessors = "1",
             };
-            public const MSPTask Task2 = new MSPTask()
+            public static MSPTask Task2 = new MSPTask()
             {
                 Name = "Task2",
                 Mode = TaskMode.AutoSchedule,
@@ -41,8 +41,23 @@ namespace Test
             },
                 Predeccessors = "2",
             };
-            
-            public const MSPTask expectedvalue1 = new MSPTask()
+
+            public static MSPTask Task3 = new MSPTask()
+            {
+                Name = "Task3",
+                Mode = TaskMode.AutoSchedule,
+                ID = "AL212",
+                DurationInDay = 130,
+                TaskNo = 2,
+                Resources = new List<MSPResource>() 
+                { 
+                    new MSPResource("Gach", 30.3, "vien", ResourceType.Material, 15),
+                    new MSPResource("Cong Nhan", 5, "CN", ResourceType.Work, 10)
+                },
+                Predeccessors = "1",
+            };
+
+            public static MSPTask expectedvalue1 = new MSPTask()
             {
                 Name = "Combined Task",
                 Mode = TaskMode.AutoSchedule,
@@ -58,14 +73,39 @@ namespace Test
                 },
                 Predeccessors = string.Empty,
             };
+            public static MSPTask expectedvalue2 = new MSPTask()
+            {
+                Name = "Combined Task",
+                Mode = TaskMode.AutoSchedule,
+                ID = "AB111+AF222+AL212",
+                DurationInDay = 350,
+                TaskNo = 1,
+                Resources = new List<MSPResource>() { 
+                    new MSPResource("Gach",11.1, "vien", ResourceType.Material, 12),
+                    new MSPResource("Da",12.2, "m3", ResourceType.Material, 14),
+                    new MSPResource("Gach", 20.2, "vien", ResourceType.Material, 12),
+                    new MSPResource("Da", 13, "m3", ResourceType.Material, 14),
+                    new MSPResource("Cong Nhan", 5, "CN", ResourceType.Work, 10),
+                    new MSPResource("Gach", 30.3, "vien", ResourceType.Material, 15),
+                    new MSPResource("Cong Nhan", 5, "CN", ResourceType.Work, 10),
+                },
+                Predeccessors = string.Empty,
+            };
         }
-        
-        [TestCase(TestDatabase.Task1,TestDatabase.Task2,Result=TestDatabase.expectedvalue1)]
-        public void Test_TaskCombine_Method(MSPTask expectedvalue,MSPTask Task1, MSPTask Task2)
+        static object[] Testcases =
         {
-            MSPTask actualvalue = Task1.CombineTask("Combined Task", Task2);
+            new object[] {TestDatabase.expectedvalue1,new MSPTask[] {TestDatabase.Task1,TestDatabase.Task2}},
+            new object[] {TestDatabase.expectedvalue2,new MSPTask[] {TestDatabase.Task1,TestDatabase.Task2,TestDatabase.Task3}},
+           
+        };
+        [Test, TestCaseSource("Testcases")]
+        public void Test_TaskCombine_Method(MSPTask expectedvalue,params MSPTask[] Tasks)
+        {
+            MSPTask actualvalue = MSP_Methods.CombineTasks("Combined Task", Tasks);
             Assert.AreEqual(expectedvalue, actualvalue);
         }
+        
+        
         [Test]
         public void Test_Equals_Resource()
         {
