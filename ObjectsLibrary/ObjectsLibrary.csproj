@@ -45,9 +45,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MSExcel\ExcelObjects.cs" />
-    <Compile Include="MSProject\MSProjectObjects.cs" />
+    <Compile Include="MSProject\MSPResource.cs" />
+    <Compile Include="MSProject\MSPTask.cs" />
+    <Compile Include="MSProject\MSPMethod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="MSExcel\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

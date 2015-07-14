@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using ObjectsLibrary.MSProjectObjects;
+using ObjectsLibrary.MSProject.Resource;
+using ObjectsLibrary.MSProject.Task;
+using ObjectsLibrary.MSProject.Methods;
 
 namespace Test
 {
     [TestFixture]
-    public class TestObjectLib
+    public class Test_MSP_Method
     {
         public class TestDatabase
         {
