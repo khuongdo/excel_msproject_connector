@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ObjectsLibrary.MSProject.Resource;
-using ObjectsLibrary.MSProject.Task;
 
 
-namespace ObjectsLibrary.MSProject.Methods
+
+
+namespace ObjectsLibrary
 {
     
     public class MSP_Methods 

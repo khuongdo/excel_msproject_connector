@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MSProject = Microsoft.Office.Interop.MSProject;
 
-namespace ObjectsLibrary.MSProject.Resource
+namespace ObjectsLibrary
 {
     public enum ResourceType
     {
