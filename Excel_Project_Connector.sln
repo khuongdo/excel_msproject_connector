@@ -14,10 +14,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Excel2ProjAddin", "Excel2ProjAddin\Excel2ProjAddin.csproj", "{E6DFA261-CDE5-4BC3-B6ED-564C203AC500}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrialMaker", "TrialMaker\TrialMaker.csproj", "{2A803CAE-16F1-44C4-BF6D-2CAE88CDE659}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrialMaker Example", "TrialMaker Example\TrialMaker Example.csproj", "{BC1B622E-5D95-4BCB-88B9-908BF297BCA5}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CD_ROM|Any CPU = CD_ROM|Any CPU
@@ -57,26 +53,6 @@ Global
 		{E6DFA261-CDE5-4BC3-B6ED-564C203AC500}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E6DFA261-CDE5-4BC3-B6ED-564C203AC500}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{E6DFA261-CDE5-4BC3-B6ED-564C203AC500}.SingleImage|Any CPU.Build.0 = Release|Any CPU
-		{2A803CAE-16F1-44C4-BF6D-2CAE88CDE659}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
-		{2A803CAE-16F1-44C4-BF6D-2CAE88CDE659}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
-		{2A803CAE-16F1-44C4-BF6D-2CAE88CDE659}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2A803CAE-16F1-44C4-BF6D-2CAE88CDE659}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2A803CAE-16F1-44C4-BF6D-2CAE88CDE659}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
-		{2A803CAE-16F1-44C4-BF6D-2CAE88CDE659}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
-		{2A803CAE-16F1-44C4-BF6D-2CAE88CDE659}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2A803CAE-16F1-44C4-BF6D-2CAE88CDE659}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2A803CAE-16F1-44C4-BF6D-2CAE88CDE659}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
-		{2A803CAE-16F1-44C4-BF6D-2CAE88CDE659}.SingleImage|Any CPU.Build.0 = Release|Any CPU
-		{BC1B622E-5D95-4BCB-88B9-908BF297BCA5}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
-		{BC1B622E-5D95-4BCB-88B9-908BF297BCA5}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
-		{BC1B622E-5D95-4BCB-88B9-908BF297BCA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BC1B622E-5D95-4BCB-88B9-908BF297BCA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BC1B622E-5D95-4BCB-88B9-908BF297BCA5}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
-		{BC1B622E-5D95-4BCB-88B9-908BF297BCA5}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
-		{BC1B622E-5D95-4BCB-88B9-908BF297BCA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BC1B622E-5D95-4BCB-88B9-908BF297BCA5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BC1B622E-5D95-4BCB-88B9-908BF297BCA5}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
-		{BC1B622E-5D95-4BCB-88B9-908BF297BCA5}.SingleImage|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
