@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MSProject = Microsoft.Office.Interop.MSProject;
-using ObjectsLibrary.MSProject.Resource;
 
-namespace ObjectsLibrary.MSProject.Task
+
+namespace ObjectsLibrary
 {
     public enum TaskMode
     {
