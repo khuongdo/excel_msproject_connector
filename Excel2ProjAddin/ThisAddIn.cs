@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using Excel = Microsoft.Office.Interop.Excel;
 using Office = Microsoft.Office.Core;
 using Microsoft.Office.Tools.Excel;
+using SoftwareLocker;
 
 namespace Excel2ProjAddin
 {
@@ -13,6 +14,17 @@ namespace Excel2ProjAddin
     {
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
+            TrialMaker tm = new TrialMaker("Excel2Proj", "C:\\RegFile.reg",
+                "C:\\TMSetp.dbf",
+                "Summit your ID to email: dohuukhuong@gmail.com \r\n You will receive serial in couple of days",
+                7, "123", false);
+            byte[] MyOwnKey = { 97, 250, 1, 5, 84, 21, 7, 63,
+            4, 54, 87, 56, 123, 10, 3, 62,
+            7, 9, 20, 36, 37, 21, 101, 57};
+            tm.TripleDESKey = MyOwnKey;
+            TrialMaker.RunTypes RT = tm.ShowDialog();
+            if (RT != TrialMaker.RunTypes.Expired)
+                return;
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
