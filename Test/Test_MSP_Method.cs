@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using ObjectsLibrary.MSProject.Resource;
-using ObjectsLibrary.MSProject.Task;
-using ObjectsLibrary.MSProject.Methods;
+using ObjectsLibrary;
+
 
 namespace Test
 {
