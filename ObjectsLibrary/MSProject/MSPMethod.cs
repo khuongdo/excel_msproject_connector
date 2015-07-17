@@ -35,43 +35,59 @@ namespace ObjectsLibrary
             //
             return NewTask;
         }
-        public static MSPResource CombineResources(List<MSPResource> ResourceList)
+        public static List<MSPResource> MergeResources(List<MSPResource> ResourceList)
         {
+            List<MSPResource> MergedResource = new List<MSPResource>();
             //Get list of distinct names
             if (ResourceList == null) return null;
-            var DistinctList = ResourceList.Distinct().Select(x => x.Name).ToList();
 
-            var MaterialResources = new List<MSPResource>[] { };
-            // Resource Material type
-            int i = 0;
-            foreach (var item in DistinctList)
+            var MaterialResources = ResourceList.Where(x => x.Type == ResourceType.Material).ToList();
+            var WorkResources = ResourceList.Where(x => x.Type == ResourceType.Work).ToList();
+
+            var MaterialResources_Distinct = MaterialResources.Select(x => x.Name).Distinct().ToList();
+            foreach (var item in MaterialResources_Distinct)
             {
-                var ListMaterialRes = (from r in ResourceList
-                                       where r.Name == item && r.Type == ResourceType.Material
-                                       select r).ToList<MSPResource>();
-                if (ListMaterialRes != null)
+                var Templist = MaterialResources.Select(x => x.Name == item).ToList();
+                
+                
+                while (Templist.Count > 0)
                 {
-                    MaterialResources[i] = ListMaterialRes;
-                    i++;
+
                 }
             }
-            // Resource Work type
-            var WorkRes = (from r in ResourceList
-                           where r.Type == ResourceType.Work
-                           select r).ToList<MSPResource>();
-            //Combine Marterial Resources
-            //check null
-            if (MaterialResources.Length > 0 | MaterialResources != null)
-            {
 
-            }
+            //var DistinctList = ResourceList.Distinct().Select(x => x.Name).ToList();
+            //var MaterialResources = new List<MSPResource>[] { };
+            //// Resource Material type
+            //int i = 0;
+            //foreach (var item in DistinctList)
+            //{
+            //    var ListMaterialRes = (from r in ResourceList
+            //                           where r.Name == item && r.Type == ResourceType.Material
+            //                           select r).ToList<MSPResource>();
+            //    if (ListMaterialRes != null)
+            //    {
+            //        MaterialResources[i] = ListMaterialRes;
+            //        i++;
+            //    }
+            //}
+            //// Resource which has the same type "Work"
+            //var WorkRes = (from r in ResourceList
+            //               where r.Type == ResourceType.Work
+            //               select r).ToList<MSPResource>();
+            ////Combine Marterial Resources
+            ////check null
+            //if (MaterialResources.Length > 0 | MaterialResources != null)
+            //{
+
+            //}
 
 
         }
         private static MSPResource MergeResource(IEnumerable<MSPResource> List)
         {
             MSPResource newRes = new MSPResource();
-
+            
         }
     }
     

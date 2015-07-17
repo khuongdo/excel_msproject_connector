@@ -4,10 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MSProject = Microsoft.Office.Interop.MSProject;
+using System.Text.RegularExpressions;
 
 
 namespace ObjectsLibrary
 {
+    class Unit
+    {
+        public string FullName;
+        public string Name;
+        public int Factor;
+        public Unit(string _FullName)
+        {
+            this.FullName = _FullName;
+            Match m = Regex.Match(_FullName,"[0-9]");
+            this.Factor = Convert.ToInt32(m.Value);
+        }
+    }
     public enum TaskMode
     {
         AutoSchedule,
@@ -17,6 +30,7 @@ namespace ObjectsLibrary
     {
         public List<MSPResource> Resources;
         public string ID;
+        public Unit Unit;
         public int TaskNo;
         public string Name;
         public int DurationInDay;

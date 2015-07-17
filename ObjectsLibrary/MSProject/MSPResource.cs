@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using MSProject = Microsoft.Office.Interop.MSProject;
 
 namespace ObjectsLibrary
@@ -15,20 +16,27 @@ namespace ObjectsLibrary
     public class MSPResource
     {
         public ResourceType Type;
-        public double ResWaste;
+        public double Waste;
         public string Unit;
+        
         public string Name;
         public double Value;
 
         #region # PROPERTY
-        public MSPResource(string _Name, double _Value, string _Unit, ResourceType _Type, double _ResWaste)
+        public MSPResource(string _Name, double _Value, string _Unit, ResourceType _Type, double _Waste)
         {
+            
             this.Name = _Name;
             this.Value = _Value;
             this.Unit = _Unit;
-            this.ResWaste = _ResWaste;
+            this.Waste = _Waste;
             this.Type = _Type;
+            
+        }
 
+        public MSPResource()
+        {
+            // TODO: Complete member initialization
         }
         #endregion
 
@@ -43,7 +51,7 @@ namespace ObjectsLibrary
                 return this.Name == resobj.Name
                     && this.Value == resobj.Value
                     && this.Unit == resobj.Unit
-                    && this.ResWaste == resobj.ResWaste
+                    && this.Waste == resobj.Waste
                     && this.Type == resobj.Type;
         }
         public override bool Equals(object obj)
@@ -55,7 +63,7 @@ namespace ObjectsLibrary
                 return false;
             else
                 return this.Name == res.Name
-                && this.ResWaste == res.ResWaste
+                && this.Waste == res.Waste
                 && this.Type == res.Type
                 && this.Unit == res.Unit
                 && this.Value == res.Value;
@@ -66,7 +74,7 @@ namespace ObjectsLibrary
             {
                 int hash = 17;
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Name) ? this.Name.GetHashCode() : 0);
-                hash = (hash * 23) + (!Object.ReferenceEquals(null, this.ResWaste) ? this.ResWaste.GetHashCode() : 0);
+                hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Waste) ? this.Waste.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Type) ? this.Type.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Unit) ? this.Unit.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Value) ? this.Value.GetHashCode() : 0);
@@ -83,7 +91,7 @@ namespace ObjectsLibrary
         public bool Equals(MSPResource Res1, MSPResource Res2)
         {
             return Res1.Name == Res2.Name
-                && Res1.ResWaste == Res2.ResWaste
+                && Res1.Waste == Res2.Waste
                 && Res1.Type == Res2.Type
                 && Res1.Unit == Res2.Unit
                 && Res1.Value == Res2.Value;
@@ -95,7 +103,7 @@ namespace ObjectsLibrary
             {
                 int hash = 17;
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, Res.Name) ? Res.Name.GetHashCode() : 0);
-                hash = (hash * 23) + (!Object.ReferenceEquals(null, Res.ResWaste) ? Res.ResWaste.GetHashCode() : 0);
+                hash = (hash * 23) + (!Object.ReferenceEquals(null, Res.Waste) ? Res.Waste.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, Res.Type) ? Res.Type.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, Res.Unit) ? Res.Unit.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, Res.Value) ? Res.Value.GetHashCode() : 0);
