@@ -9,19 +9,37 @@ using System.Text.RegularExpressions;
 
 namespace ObjectsLibrary
 {
-    public class Unit
+   
+    public class Unit:IComparable<Unit>
     {
         public string FullName;
         public string Name;
         public int Factor;
         public Unit(string _FullName)
         {
-            this.FullName = _FullName;
-            Regex rg = new Regex("^[0-9]{1,5}");
-            Factor =Convert.ToInt32(rg.Match(this.FullName).Value);
-            this.Name = _FullName.Remove(0,rg.Match(this.FullName).Length);
+            try
+            {
+                this.FullName = _FullName;
+                Regex rg = new Regex("^[0-9]{1,5}");
+                Factor = Convert.ToInt32(rg.Match(this.FullName).Value);
+                this.Name = _FullName.Remove(0, rg.Match(this.FullName).Length);
+            }
+            catch
+            {
+                Factor = 1;
+                this.Name = _FullName;
+            }
+           
         }
-
+        public int CompareTo(Unit unitToCompare)
+        {
+            if (this.Factor > unitToCompare.Factor)
+                return 1;
+            else if (this.Factor < unitToCompare.Factor)
+                return -1;
+            else
+                return 0;
+        }
     }
     public enum TaskMode
     {
@@ -30,15 +48,18 @@ namespace ObjectsLibrary
     }
     public class MSPTask
     {
+
         public List<MSPResource> Resources;
         public string ID;
         public Unit unit;
+        
+        public double Value;
         public int TaskNo;
         public string Name;
         public int DurationInDay;
         public string Predeccessors;
         public TaskMode Mode;
-        public MSPTask(string _ID, string _Name, int _TaskNo, int _Duration,
+        public MSPTask(string _ID, string _Name,double _value, int _TaskNo, int _Duration,
                             string _Predecessors, List<MSPResource> _Resources, TaskMode _Mode = TaskMode.AutoSchedule)
         {
             this.Resources = new List<MSPResource>();
@@ -46,24 +67,28 @@ namespace ObjectsLibrary
             this.Name = _Name;
             this.TaskNo = _TaskNo;
             this.DurationInDay = _Duration;
-
+            this.Value = _value;
             this.Predeccessors = _Predecessors;
             this.Resources = _Resources;
             this.Mode = _Mode;
-
+            
         }
         public MSPTask()
         {
             Resources = new List<MSPResource>();
         }
-
+        public void AddResource(params MSPResource[] resources)
+        {
+            foreach (MSPResource r in resources)
+            {
+                r.TaskWaste = this.Value * this.unit.Factor; //Valua = waste
+                this.Resources.Add(r);
+            }
+            
+        }
         #region # Methods
 
-        private List<MSPResource> MergeResource(List<MSPResource> ResList1, List<MSPResource> Reslist2)
-        {
-            var Merge = ResList1.Union(Reslist2, new ResourceComparer());
-            return Merge.ToList<MSPResource>();
-        }
+        
 
         #endregion
 
@@ -77,7 +102,10 @@ namespace ObjectsLibrary
                 && this.DurationInDay == OtherTask.DurationInDay
                 && this.Predeccessors == OtherTask.Predeccessors
                 && this.Mode == OtherTask.Mode
+                && this.Value == OtherTask.Value
+                //&& this.Waste == OtherTask.Waste
                 && this.Resources == OtherTask.Resources;
+
         }
         public override bool Equals(object obj)
         {
@@ -93,6 +121,8 @@ namespace ObjectsLibrary
                 && this.DurationInDay == taskobj.DurationInDay
                 && this.Predeccessors == taskobj.Predeccessors
                 && this.Mode == taskobj.Mode
+                && this.Value == taskobj.Value
+                //&& this.Waste == taskobj.Waste
                 && this.Resources.All(taskobj.Resources.Contains);
         }
         public override int GetHashCode()
@@ -106,6 +136,8 @@ namespace ObjectsLibrary
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.DurationInDay) ? this.DurationInDay.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Predeccessors) ? this.Predeccessors.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Mode) ? this.Mode.GetHashCode() : 0);
+                hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Value) ? this.Value.GetHashCode() : 0);
+                //hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Waste) ? this.Waste.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Resources) ? this.Resources.GetHashCode() : 0);
                 return hash;
             }
