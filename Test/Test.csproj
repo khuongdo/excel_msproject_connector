@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestRegex.cs" />
     <Compile Include="Test_MSP_Method.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

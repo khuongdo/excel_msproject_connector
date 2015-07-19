@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace ObjectsLibrary
 {
-    class Unit
+    public class Unit
     {
         public string FullName;
         public string Name;
@@ -17,9 +17,11 @@ namespace ObjectsLibrary
         public Unit(string _FullName)
         {
             this.FullName = _FullName;
-            Match m = Regex.Match(_FullName,"[0-9]");
-            this.Factor = Convert.ToInt32(m.Value);
+            Regex rg = new Regex("^[0-9]{1,5}");
+            Factor =Convert.ToInt32(rg.Match(this.FullName).Value);
+            this.Name = _FullName.Remove(0,rg.Match(this.FullName).Length);
         }
+
     }
     public enum TaskMode
     {
@@ -30,7 +32,7 @@ namespace ObjectsLibrary
     {
         public List<MSPResource> Resources;
         public string ID;
-        public Unit Unit;
+        public Unit unit;
         public int TaskNo;
         public string Name;
         public int DurationInDay;
