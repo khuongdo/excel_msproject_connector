@@ -76,6 +76,7 @@ namespace ObjectsLibrary
                         }
                         tempResource.Assess = Math.Round(sumTaskWaste_x_Assess / sumTaskWaste,5);
                         tempResource.Unit = TempList[0].Unit;
+                        tempResource.UnitPrice = TempList[0].UnitPrice;
                         tempResource.Name = TempList[0].Name;
                         tempResource.Type = ResourceType.Material;
                         NewResources.Add(tempResource);
@@ -112,9 +113,12 @@ namespace ObjectsLibrary
                 strnameList.ForEach(x => dblnameList.Add(Convert.ToDouble(x)));
                 double maxValue = dblnameList.Max();
                 tempResource.Name = Regex.Replace(WorkResources[0].Name, "[0-9]*,[0-9]*", string.Format("{0:0.0}",maxValue).Replace('.',','));
-                tempResource.ID = (from MSPResource r in WorkResources
+                
+                MSPResource maxRes = (from MSPResource r in WorkResources
                                    where r.Name == tempResource.Name
-                                   select r).First().ID;
+                                   select r).First();
+                tempResource.ID = maxRes.ID;
+                tempResource.UnitPrice = maxRes.UnitPrice;
                 tempResource.Type = ResourceType.Work;
                 NewResources.Add(tempResource);
             }

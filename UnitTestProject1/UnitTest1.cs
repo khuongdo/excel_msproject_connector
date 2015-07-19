@@ -62,7 +62,7 @@ namespace UnitTestProject1
 
             };
             Task1.AddResource(
-                new MSPResource("NC.0007", "Nhân công bậc 3,0/7 - Nhóm I", 12.48m, "Công", 1.04, ResourceType.Work)
+                new MSPResource("NC.0007", "Nhân công bậc 3,0/7 - Nhóm I", 12.48m, "Công", 1.04,100000, ResourceType.Work)
                 );
             MSPTask Task2 = new MSPTask() 
             {
@@ -77,9 +77,9 @@ namespace UnitTestProject1
 
             };
             Task2.AddResource(
-                new MSPResource("NC.0007", "Nhân công bậc 3,5/7 - Nhóm I", 14.22m, "Công", 1.422, ResourceType.Work),
-                new MSPResource("MA.0089", "Máy đào 1,25m3", 2.3m, "ca", 0.23, ResourceType.Material),
-                new MSPResource("MA.0222", "Máy ủi 108CV", 0.36m, "ca", 0.036, ResourceType.Material));
+                new MSPResource("NC.0007", "Nhân công bậc 3,5/7 - Nhóm I", 14.22m, "Công", 1.422,150000, ResourceType.Work),
+                new MSPResource("MA.0089", "Máy đào 1,25m3", 2.3m, "ca", 0.23,20000, ResourceType.Material),
+                new MSPResource("MA.0222", "Máy ủi 108CV", 0.36m, "ca", 0.036,30000, ResourceType.Material));
             MSPTask Task3 = new MSPTask()
             {
                 DurationInDay = 25,
@@ -92,9 +92,9 @@ namespace UnitTestProject1
                 Value = 20,
             };
             Task3.AddResource(
-                new MSPResource("NC.0012", "Nhân công bậc 4,0/7 - Nhóm I", 11m, "Công", 1.322, ResourceType.Work),
-                new MSPResource("MX","Máy xúc", 10m, "ca", 0.56, ResourceType.Material),
-                new MSPResource("MA.0089", "Máy đào 1,25m3", 4m, "ca", 0.5, ResourceType.Material));
+                new MSPResource("NC.0012", "Nhân công bậc 4,0/7 - Nhóm I", 11m, "Công", 1.322,200000, ResourceType.Work),
+                new MSPResource("MX","Máy xúc", 10m, "ca", 0.56,45000, ResourceType.Material),
+                new MSPResource("MA.0089", "Máy đào 1,25m3", 4m, "ca", 0.5,20000, ResourceType.Material));
             MSPTask actual_value = MSP_Methods.CombineTasks("MergedTask", Task1, Task2,Task3);
             MSPTask expected_value = new MSPTask()
             {
@@ -108,10 +108,10 @@ namespace UnitTestProject1
                 Value = 3012,
             };
             expected_value.AddResource(
-                new MSPResource("MA.0089", "Máy đào 1,25m3", 6.3m, "ca", 0.41, ResourceType.Material),
-                new MSPResource("MA.0222", "Máy ủi 108CV", 0.36m, "ca", 0.036, ResourceType.Material),
-                new MSPResource("MX","Máy xúc", 10m, "ca", 0.56, ResourceType.Material),
-                new MSPResource("NC.0012", "Nhân công bậc 4,0/7 - Nhóm I", 37.7m, "Công", Math.Round((12 * 1.04 + 10 * 1.422 * 100 + 20 * 1.322 * 100) / (12 + 10 * 100 + 20 * 100), 5), ResourceType.Work)
+                new MSPResource("MA.0089", "Máy đào 1,25m3", 6.3m, "ca", 0.41,20000, ResourceType.Material),
+                new MSPResource("MA.0222", "Máy ủi 108CV", 0.36m, "ca", 0.036,30000, ResourceType.Material),
+                new MSPResource("MX","Máy xúc", 10m, "ca", 0.56,45000, ResourceType.Material),
+                new MSPResource("NC.0012", "Nhân công bậc 4,0/7 - Nhóm I", 37.7m, "Công", Math.Round((12 * 1.04 + 10 * 1.422 * 100 + 20 * 1.322 * 100) / (12 + 10 * 100 + 20 * 100), 5),200000, ResourceType.Work)
                 );
             
             Assert.AreEqual(expected_value, actual_value);

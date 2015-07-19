@@ -160,6 +160,7 @@
     can be found.
   -->
   <ItemGroup>
+    <Compile Include="Module\ExcelModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -191,6 +192,12 @@
       <DependentUpon>ThisAddIn.Designer.xml</DependentUpon>
     </Compile>
     <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ObjectsLibrary\ObjectsLibrary.csproj">
+      <Project>{a9306f4e-384b-4319-9900-4c975c25eddb}</Project>
+      <Name>ObjectsLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

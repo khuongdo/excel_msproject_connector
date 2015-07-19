@@ -22,14 +22,15 @@ namespace ObjectsLibrary
         public string Name;
         public decimal Value;
         public double TaskWaste;
-        #region # PROPERTY
-        public MSPResource(string _ID,string _Name, decimal _Value, string _Unit,double _Assess, ResourceType _Type)
+        public int UnitPrice;
+        #region # CONSTRUCTOR
+        public MSPResource(string _ID,string _Name, decimal _Value, string _Unit,double _Assess,int _UnitPrice, ResourceType _Type)
         {
             this.ID = _ID;
             this.Name = _Name;
             this.Value = _Value;
             this.Unit = _Unit;
-            //this.TaskWaste = _TaskWaste;
+            this.UnitPrice = _UnitPrice;
             this.Assess = _Assess;
             this.Type = _Type;
             
@@ -53,6 +54,7 @@ namespace ObjectsLibrary
                     && this.ID == resobj.ID
                     && this.Value == resobj.Value
                     && this.Unit == resobj.Unit
+                    && this.UnitPrice == resobj.UnitPrice
                     && this.Assess == resobj.Assess
                     && this.TaskWaste == resobj.TaskWaste
                     && this.Type == resobj.Type;
@@ -68,6 +70,7 @@ namespace ObjectsLibrary
                 return this.Name == res.Name
                     && this.ID == res.ID
                     && this.TaskWaste == res.TaskWaste
+                    && this.UnitPrice == res.UnitPrice
                     && this.Assess == res.Assess
                     && this.Type == res.Type
                     && this.Unit == res.Unit
@@ -80,6 +83,7 @@ namespace ObjectsLibrary
                 int hash = 17;
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Name) ? this.Name.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.ID) ? this.ID.GetHashCode() : 0);
+                hash = (hash * 23) + (!Object.ReferenceEquals(null, this.UnitPrice) ? this.UnitPrice.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Assess) ? this.Assess.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.TaskWaste) ? this.TaskWaste.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Type) ? this.Type.GetHashCode() : 0);
@@ -91,20 +95,7 @@ namespace ObjectsLibrary
 
 
         }
-        //public static MSPResource operator *(MSPResource res1, double x)
-        //{
-        //    return new MSPResource()
-        //    {
-        //        Name = res1.Name,
-        //        Type = res1.Type,
-        //        Value = res1.Value,
-        //        Unit = res1.Unit,
-
-               
-
-        //    };
-        //}
-
+       
     }
     public class ResourceComparer : IEqualityComparer<MSPResource>
     {
@@ -113,6 +104,7 @@ namespace ObjectsLibrary
             return Res1.Name == Res2.Name
                 && Res1.ID == Res2.ID
                 && Res1.Assess == Res2.Assess
+                && Res1.UnitPrice == Res2.UnitPrice
                 && Res1.TaskWaste == Res2.TaskWaste
                 && Res1.Type == Res2.Type
                 && Res1.Unit == Res2.Unit
@@ -127,6 +119,7 @@ namespace ObjectsLibrary
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, Res.Name) ? Res.Name.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, Res.ID) ? Res.ID.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, Res.Assess) ? Res.Assess.GetHashCode() : 0);
+                hash = (hash * 23) + (!Object.ReferenceEquals(null, Res.UnitPrice) ? Res.UnitPrice.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, Res.Type) ? Res.Type.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, Res.Unit) ? Res.Unit.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, Res.TaskWaste) ? Res.TaskWaste.GetHashCode() : 0);
