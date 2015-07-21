@@ -4,32 +4,56 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ObjectsLibrary;
-using MSExcel = Microsoft.Office.Interop.Excel;
+using Excel = Microsoft.Office.Interop.Excel;
 
 
 namespace Excel2ProjAddin
 {
-    class ExcelModule
+    public class ExcelModule
     {
-        MSExcel.Workbook xlWB;
-        MSExcel.Worksheet xlWS;
-        List<MSPTask> TaskCollection = new List<MSPTask>();
-        public void CollectTasks()
+        static Excel.Workbook xlWB;
+        static Excel.Worksheet xlWS;
+        static List<MSPTask> TaskCollection = new List<MSPTask>();
+        public static void CollectTasks()
         {
             var xlApp = Globals.ThisAddIn.Application;
-            xlWS = xlApp.Sheets.get_Item("PTVT");
-            MSExcel.Range usedRange = xlWS.UsedRange;
-            MSExcel.Range usefulRange = usedRange.get_Range("4:" + (usedRange.Row - 1).ToString());
-            
-            foreach (MSExcel.Range r in usefulRange.Rows)
+            xlWS = (Excel.Worksheet)xlApp.Sheets.get_Item("PTVT");
+            Excel.Range usedRange = (Excel.Range)xlWS.UsedRange;
+            List<MSPTask> ListTasks = new List<MSPTask>();
+            MSPTask TaskToAdd = null;
+            for (int r = 5; r <= usedRange.Rows.Count; r++)
             {
-                MSExcel.Range tempCell = r.get_Item(1);
-               
+                object TaskNo = usedRange.Value2[r,1];
+                object ResourceID = usedRange.Value2[r,2];
+                if (TaskNo != null)
+                {
+                    if (TaskToAdd != null)
+                    {
+                        ListTasks.Add(TaskToAdd);
+                    }
+                    TaskToAdd = new MSPTask();
+                    TaskToAdd.TaskNo = Convert.ToInt32(TaskNo);
+                    TaskToAdd.ID = Convert.ToString(((Excel.Range)xlWS.Cells[r, 2]).Value2);
+                    TaskToAdd.Name = Convert.ToString(((Excel.Range)xlWS.Cells[r, 3]).Value2);
+                    TaskToAdd.unit = new Unit(Convert.ToString(((Excel.Range)xlWS.Cells[r, 4]).Value2));
+                    TaskToAdd.Value = Convert.ToDouble(((Excel.Range)xlWS.Cells[r, 5]).Value2);
+
+                }
+                else if (ResourceID != null)
+                {
+                    MSPResource ResToAdd = new MSPResource()
+                    {
+                        ID = Convert.ToString(ResourceID),
+                        Name = Convert.ToString(((Excel.Range)xlWS.Cells[r, 3]).Value2),
+                        Unit = Convert.ToString(((Excel.Range)xlWS.Cells[r, 4]).Value2),
+                        Assess = Convert.ToDouble(((Excel.Range)xlWS.Cells[r, 5]).Value2),
+                        Value = Convert.ToDecimal(((Excel.Range)xlWS.Cells[r, 6]).Value2),
+                        UnitPrice = Convert.ToInt32(((Excel.Range)xlWS.Cells[r, 7]).Value2),
+                    };
+                    TaskToAdd.AddResource(ResToAdd);
+                }
+                else continue;
             }
-
-            
-            
-
         }   
     }
 }
