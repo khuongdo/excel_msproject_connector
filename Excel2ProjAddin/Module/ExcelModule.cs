@@ -11,10 +11,8 @@ namespace Excel2ProjAddin
 {
     public class ExcelModule
     {
-        static Excel.Workbook xlWB;
         static Excel.Worksheet xlWS;
-        static List<MSPTask> TaskCollection = new List<MSPTask>();
-        public static void CollectTasks()
+        public static List<MSPTask> CollectTasks()
         {
             var xlApp = Globals.ThisAddIn.Application;
             xlWS = (Excel.Worksheet)xlApp.Sheets.get_Item("PTVT");
@@ -37,7 +35,6 @@ namespace Excel2ProjAddin
                     TaskToAdd.Name = Convert.ToString(((Excel.Range)xlWS.Cells[r, 3]).Value2);
                     TaskToAdd.unit = new Unit(Convert.ToString(((Excel.Range)xlWS.Cells[r, 4]).Value2));
                     TaskToAdd.Value = Convert.ToDouble(((Excel.Range)xlWS.Cells[r, 5]).Value2);
-
                 }
                 else if (ResourceID != null)
                 {
@@ -54,6 +51,7 @@ namespace Excel2ProjAddin
                 }
                 else continue;
             }
+            return ListTasks;
         }   
     }
 }

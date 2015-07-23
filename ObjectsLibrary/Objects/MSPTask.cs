@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using MSProject = Microsoft.Office.Interop.MSProject;
 using System.Text.RegularExpressions;
+using BrightIdeasSoftware;
+using System.Windows.Forms;
 
 
 namespace ObjectsLibrary
@@ -12,7 +14,7 @@ namespace ObjectsLibrary
    
     public class Unit:IComparable<Unit>
     {
-        public string FullName;
+        public string FullName {get;set;}
         public string Name;
         public int Factor;
         public Unit(string _FullName)
@@ -48,17 +50,26 @@ namespace ObjectsLibrary
     }
     public class MSPTask
     {
-
-        public List<MSPResource> Resources;
-        public string ID;
-        public Unit unit;
-        
-        public double Value;
-        public int TaskNo;
-        public string Name;
-        public int DurationInDay;
-        public string Predeccessors;
-        public TaskMode Mode;
+        [OLVColumn("Mã",DisplayIndex = 2,Width=50,TextAlign=HorizontalAlignment.Left)]
+        public string ID { get; set; }
+        [OLVColumn("Tên công tác",DisplayIndex = 3,Width=250,TextAlign=HorizontalAlignment.Left)]
+       
+        public string Name { get; set; }
+        [OLVColumn(IsVisible = false)]
+        public Unit unit { get; set; }
+        [OLVColumn("Khối lượng",DisplayIndex =4,Width=50,TextAlign=HorizontalAlignment.Left)]
+        public double Value { get; set; }
+        [OLVColumn(IsVisible=false)]
+        public List<MSPResource> Resources { get; set; }
+        [OLVColumn("STT",DisplayIndex=1,Width=20,TextAlign=HorizontalAlignment.Left)]
+        public int TaskNo { get; set; }
+      
+        [OLVColumn("Thời gian",DisplayIndex=5,Width=30,TextAlign=HorizontalAlignment.Left)]
+        public int DurationInDay { get; set; }
+        [OLVColumn(IsVisible=false)]
+        public string Predeccessors { get; set; }
+        [OLVColumn("Chế độ",DisplayIndex=6,Width=50,TextAlign= HorizontalAlignment.Left)]
+        public TaskMode Mode { get; set; }
         public MSPTask(string _ID, string _Name,double _value, int _TaskNo, int _Duration,
                             string _Predecessors, List<MSPResource> _Resources, TaskMode _Mode = TaskMode.AutoSchedule)
         {
@@ -103,7 +114,7 @@ namespace ObjectsLibrary
                 && this.Predeccessors == OtherTask.Predeccessors
                 && this.Mode == OtherTask.Mode
                 && this.Value == OtherTask.Value
-                //&& this.Waste == OtherTask.Waste
+                
                 && this.Resources == OtherTask.Resources;
 
         }
