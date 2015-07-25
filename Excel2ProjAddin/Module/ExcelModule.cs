@@ -19,6 +19,7 @@ namespace Excel2ProjAddin
             Excel.Range usedRange = (Excel.Range)xlWS.UsedRange;
             List<MSPTask> ListTasks = new List<MSPTask>();
             MSPTask TaskToAdd = null;
+            int id = 1;
             for (int r = 5; r <= usedRange.Rows.Count; r++)
             {
                 object TaskNo = usedRange.Value2[r,1];
@@ -29,17 +30,22 @@ namespace Excel2ProjAddin
                     {
                         ListTasks.Add(TaskToAdd);
                     }
-                    TaskToAdd = new MSPTask();
-                    TaskToAdd.TaskNo = Convert.ToInt32(TaskNo);
-                    TaskToAdd.ID = Convert.ToString(((Excel.Range)xlWS.Cells[r, 2]).Value2);
-                    TaskToAdd.Name = Convert.ToString(((Excel.Range)xlWS.Cells[r, 3]).Value2);
-                    TaskToAdd.unit = new Unit(Convert.ToString(((Excel.Range)xlWS.Cells[r, 4]).Value2));
-                    TaskToAdd.Value = Convert.ToDouble(((Excel.Range)xlWS.Cells[r, 5]).Value2);
+                    TaskToAdd = new MSPTask() 
+                    { 
+                        unique_id = id++,
+                        parent_id = 0,
+                        TaskNo = Convert.ToInt32(TaskNo),
+                        ID = Convert.ToString(((Excel.Range)xlWS.Cells[r, 2]).Value2),
+                        Name = Convert.ToString(((Excel.Range)xlWS.Cells[r, 3]).Value2),
+                        unit = new Unit(Convert.ToString(((Excel.Range)xlWS.Cells[r, 4]).Value2)),
+                        Value = Convert.ToDouble(((Excel.Range)xlWS.Cells[r, 5]).Value2),
+                    };
                 }
                 else if (ResourceID != null)
                 {
                     MSPResource ResToAdd = new MSPResource()
                     {
+                        unique_id = id++,
                         ID = Convert.ToString(ResourceID),
                         Name = Convert.ToString(((Excel.Range)xlWS.Cells[r, 3]).Value2),
                         Unit = Convert.ToString(((Excel.Range)xlWS.Cells[r, 4]).Value2),

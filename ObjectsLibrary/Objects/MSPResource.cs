@@ -15,6 +15,8 @@ namespace ObjectsLibrary
     }
     public class MSPResource
     {
+        public int unique_id;
+        public int parent_id;
         public string ID;
         public ResourceType Type;
         public double Assess;

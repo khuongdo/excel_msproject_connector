@@ -50,6 +50,8 @@ namespace ObjectsLibrary
     }
     public class MSPTask
     {
+        public int unique_id;
+        public int parent_id;
         [OLVColumn("Mã",DisplayIndex = 2,Width=50,TextAlign=HorizontalAlignment.Left)]
         public string ID { get; set; }
         [OLVColumn("Tên công tác",DisplayIndex = 3,Width=250,TextAlign=HorizontalAlignment.Left)]
@@ -93,6 +95,7 @@ namespace ObjectsLibrary
             foreach (MSPResource r in resources)
             {
                 r.TaskWaste = this.Value * this.unit.Factor; //Valua = waste
+                r.parent_id = this.unique_id;
                 this.Resources.Add(r);
             }
             

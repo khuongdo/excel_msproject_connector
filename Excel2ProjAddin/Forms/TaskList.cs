@@ -13,16 +13,30 @@ namespace Excel2ProjAddin.Forms
 {
     public partial class TaskList : Form
     {
-      
+        List<MSPTask> list = new List<MSPTask>();
         public TaskList(List<MSPTask> ListTask)
         {
+            list = ListTask;
             InitializeComponent();
-            Generator.GenerateColumns(objectListView1,typeof(MSPTask));
-            //Generator.GenerateColumns(objectListView1, ListTask);
-            objectListView1.SetObjects(ListTask);
+            dataListView_tasks.DataSource = ListTask;
 
-           
+            
         }
+
+        private void dataListView1_CellEditFinishing(object sender, CellEditEventArgs e)
+        {
+            
+        }
+
+       
+
+        private void dataListView_tasks_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            dataListView_Resources.Clear();
+            dataListView_Resources.DataSource = list.Single(x=>x.ID == dataListView_tasks.SelectedItem.Text).Resources;
+        }
+
+        
     }
    
 }
