@@ -51,7 +51,7 @@ namespace UnitTestProject1
             MSPTask Task1 = new MSPTask() 
             {
                 DurationInDay = 10,
-                ID = "AB.11442",
+                Code = "AB.11442",
                 Mode = TaskMode.AutoSchedule,
                 Name = "Dao mong 1",
                 Predeccessors = "1",
@@ -67,7 +67,7 @@ namespace UnitTestProject1
             MSPTask Task2 = new MSPTask() 
             {
                 DurationInDay = 20,
-                ID = "AB.25422",
+                Code = "AB.25422",
                 Mode = TaskMode.AutoSchedule,
                 Name = "Dao mong 2",
                 Predeccessors = "1",
@@ -83,7 +83,7 @@ namespace UnitTestProject1
             MSPTask Task3 = new MSPTask()
             {
                 DurationInDay = 25,
-                ID = "AB.11111",
+                Code = "AB.11111",
                 Mode = TaskMode.AutoSchedule,
                 Name = "Dao mong 3",
                 Predeccessors = "1",
@@ -99,7 +99,7 @@ namespace UnitTestProject1
             MSPTask expected_value = new MSPTask()
             {
                 DurationInDay = 55,
-                ID = "AB.11442+AB.25422+AB.11111",
+                Code = "AB.11442+AB.25422+AB.11111",
                 Mode = TaskMode.AutoSchedule,
                 Name = "MergedTask",
                 Predeccessors = "",

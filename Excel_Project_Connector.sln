@@ -5,11 +5,6 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectsLibrary", "ObjectsLibrary\ObjectsLibrary.csproj", "{A9306F4E-384B-4319-9900-4C975C25EDDB}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{38A3572D-8331-4950-8FEE-E7CE029E1B55}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\packages.config = .nuget\packages.config
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Excel2ProjAddin", "Excel2ProjAddin\Excel2ProjAddin.csproj", "{E6DFA261-CDE5-4BC3-B6ED-564C203AC500}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "UnitTestProject1\Test.csproj", "{F38BFDBB-F50F-444B-BCB7-3DDB5856DEF9}"

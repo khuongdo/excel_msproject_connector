@@ -19,7 +19,7 @@ namespace ObjectsLibrary
             //Combine task value multiply with unit factor
             Array.ForEach(Tasks, x => NewTask.Value += x.Value * x.unit.Factor);
             //Combine Task ID
-            NewTask.ID = Tasks.Select(i => i.ID).Aggregate((i, j) => i + "+" + j);
+            NewTask.Code = Tasks.Select(i => i.Code).Aggregate((i, j) => i + "+" + j);
             //Task No
             NewTask.TaskNo = 1;
             //duration
@@ -65,7 +65,7 @@ namespace ObjectsLibrary
                     else
                     {
                         MSPResource tempResource = new MSPResource();
-                        tempResource.ID = TempList[0].ID;
+                        tempResource.Code = TempList[0].Code;
                         double sumTaskWaste_x_Assess = 0;
                         double sumTaskWaste = 0;
                         foreach (MSPResource r in TempList)
@@ -117,7 +117,7 @@ namespace ObjectsLibrary
                 MSPResource maxRes = (from MSPResource r in WorkResources
                                    where r.Name == tempResource.Name
                                    select r).First();
-                tempResource.ID = maxRes.ID;
+                tempResource.Code = maxRes.Code;
                 tempResource.UnitPrice = maxRes.UnitPrice;
                 tempResource.Type = ResourceType.Work;
                 NewResources.Add(tempResource);

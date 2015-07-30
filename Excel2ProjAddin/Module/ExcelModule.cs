@@ -19,7 +19,7 @@ namespace Excel2ProjAddin
             Excel.Range usedRange = (Excel.Range)xlWS.UsedRange;
             List<MSPTask> ListTasks = new List<MSPTask>();
             MSPTask TaskToAdd = null;
-            int id = 1;
+            int id = 0;
             for (int r = 5; r <= usedRange.Rows.Count; r++)
             {
                 object TaskNo = usedRange.Value2[r,1];
@@ -32,10 +32,9 @@ namespace Excel2ProjAddin
                     }
                     TaskToAdd = new MSPTask() 
                     { 
-                        unique_id = id++,
-                        parent_id = 0,
+                        ID = id++,
                         TaskNo = Convert.ToInt32(TaskNo),
-                        ID = Convert.ToString(((Excel.Range)xlWS.Cells[r, 2]).Value2),
+                        Code = Convert.ToString(((Excel.Range)xlWS.Cells[r, 2]).Value2),
                         Name = Convert.ToString(((Excel.Range)xlWS.Cells[r, 3]).Value2),
                         unit = new Unit(Convert.ToString(((Excel.Range)xlWS.Cells[r, 4]).Value2)),
                         Value = Convert.ToDouble(((Excel.Range)xlWS.Cells[r, 5]).Value2),
@@ -45,8 +44,8 @@ namespace Excel2ProjAddin
                 {
                     MSPResource ResToAdd = new MSPResource()
                     {
-                        unique_id = id++,
-                        ID = Convert.ToString(ResourceID),
+                        
+                        Code = Convert.ToString(ResourceID),
                         Name = Convert.ToString(((Excel.Range)xlWS.Cells[r, 3]).Value2),
                         Unit = Convert.ToString(((Excel.Range)xlWS.Cells[r, 4]).Value2),
                         Assess = Convert.ToDouble(((Excel.Range)xlWS.Cells[r, 5]).Value2),

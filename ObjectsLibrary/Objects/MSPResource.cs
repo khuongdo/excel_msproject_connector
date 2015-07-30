@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using MSProject = Microsoft.Office.Interop.MSProject;
+using BrightIdeasSoftware;
 
 namespace ObjectsLibrary
 {
@@ -13,22 +14,28 @@ namespace ObjectsLibrary
         Work,
         Material,
     }
+    [Serializable()]
     public class MSPResource
     {
-        public int unique_id;
-        public int parent_id;
-        public string ID;
-        public ResourceType Type;
-        public double Assess;
-        public string Unit;
-        public string Name;
-        public decimal Value;
+        [OLVColumn("Mã",DisplayIndex = 0)]
+        public string Code {get;set;}
+        [OLVColumn("Tên",DisplayIndex = 1)]
+        public string Name { get; set; }
+        [OLVColumn("Loại",DisplayIndex = 2)]
+        public ResourceType Type { get; set; }
+        [OLVColumn("Hao phí",DisplayIndex = 4)]
+        public double Assess { get; set; } // Hao phi
+        [OLVColumn("ĐV",DisplayIndex = 3)]
+        public string Unit { get; set; }
+        [OLVColumn("Khối lượng",DisplayIndex = 5)]
+        public decimal Value { get; set; }
+        
         public double TaskWaste;
         public int UnitPrice;
         #region # CONSTRUCTOR
         public MSPResource(string _ID,string _Name, decimal _Value, string _Unit,double _Assess,int _UnitPrice, ResourceType _Type)
         {
-            this.ID = _ID;
+            this.Code = _ID;
             this.Name = _Name;
             this.Value = _Value;
             this.Unit = _Unit;
@@ -53,7 +60,7 @@ namespace ObjectsLibrary
                 return false;
             else
                 return this.Name == resobj.Name
-                    && this.ID == resobj.ID
+                    && this.Code == resobj.Code
                     && this.Value == resobj.Value
                     && this.Unit == resobj.Unit
                     && this.UnitPrice == resobj.UnitPrice
@@ -70,7 +77,7 @@ namespace ObjectsLibrary
                 return false;
             else
                 return this.Name == res.Name
-                    && this.ID == res.ID
+                    && this.Code == res.Code
                     && this.TaskWaste == res.TaskWaste
                     && this.UnitPrice == res.UnitPrice
                     && this.Assess == res.Assess
@@ -84,7 +91,7 @@ namespace ObjectsLibrary
             {
                 int hash = 17;
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Name) ? this.Name.GetHashCode() : 0);
-                hash = (hash * 23) + (!Object.ReferenceEquals(null, this.ID) ? this.ID.GetHashCode() : 0);
+                hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Code) ? this.Code.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.UnitPrice) ? this.UnitPrice.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Assess) ? this.Assess.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.TaskWaste) ? this.TaskWaste.GetHashCode() : 0);
@@ -104,7 +111,7 @@ namespace ObjectsLibrary
         public bool Equals(MSPResource Res1, MSPResource Res2)
         {
             return Res1.Name == Res2.Name
-                && Res1.ID == Res2.ID
+                && Res1.Code == Res2.Code
                 && Res1.Assess == Res2.Assess
                 && Res1.UnitPrice == Res2.UnitPrice
                 && Res1.TaskWaste == Res2.TaskWaste
@@ -119,7 +126,7 @@ namespace ObjectsLibrary
             {
                 int hash = 17;
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, Res.Name) ? Res.Name.GetHashCode() : 0);
-                hash = (hash * 23) + (!Object.ReferenceEquals(null, Res.ID) ? Res.ID.GetHashCode() : 0);
+                hash = (hash * 23) + (!Object.ReferenceEquals(null, Res.Code) ? Res.Code.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, Res.Assess) ? Res.Assess.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, Res.UnitPrice) ? Res.UnitPrice.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, Res.Type) ? Res.Type.GetHashCode() : 0);

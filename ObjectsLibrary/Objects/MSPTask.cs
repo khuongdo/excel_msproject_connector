@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace ObjectsLibrary
 {
-   
+   [Serializable()]
     public class Unit:IComparable<Unit>
     {
         public string FullName {get;set;}
@@ -48,12 +48,13 @@ namespace ObjectsLibrary
         AutoSchedule,
         ManuallySchedule,
     }
+    [Serializable()]
     public class MSPTask
     {
-        public int unique_id;
-        public int parent_id;
-        [OLVColumn("Mã",DisplayIndex = 2,Width=50,TextAlign=HorizontalAlignment.Left)]
-        public string ID { get; set; }
+        [OLVColumn("ID",DisplayIndex = 0)]
+        public int ID {get;set;}
+        [OLVColumn("Mã số",DisplayIndex = 2,Width=50,TextAlign=HorizontalAlignment.Left)]
+        public string Code { get; set; }
         [OLVColumn("Tên công tác",DisplayIndex = 3,Width=250,TextAlign=HorizontalAlignment.Left)]
        
         public string Name { get; set; }
@@ -72,11 +73,12 @@ namespace ObjectsLibrary
         public string Predeccessors { get; set; }
         [OLVColumn("Chế độ",DisplayIndex=6,Width=50,TextAlign= HorizontalAlignment.Left)]
         public TaskMode Mode { get; set; }
-        public MSPTask(string _ID, string _Name,double _value, int _TaskNo, int _Duration,
+        public MSPTask(int _ID,string _Code, string _Name,double _value, int _TaskNo, int _Duration,
                             string _Predecessors, List<MSPResource> _Resources, TaskMode _Mode = TaskMode.AutoSchedule)
         {
             this.Resources = new List<MSPResource>();
             this.ID = _ID;
+            this.Code = _Code;
             this.Name = _Name;
             this.TaskNo = _TaskNo;
             this.DurationInDay = _Duration;
@@ -95,7 +97,7 @@ namespace ObjectsLibrary
             foreach (MSPResource r in resources)
             {
                 r.TaskWaste = this.Value * this.unit.Factor; //Valua = waste
-                r.parent_id = this.unique_id;
+                
                 this.Resources.Add(r);
             }
             
@@ -112,6 +114,7 @@ namespace ObjectsLibrary
                 return false;
             return this.Name == OtherTask.Name
                 && this.ID == OtherTask.ID
+                && this.Code == OtherTask.Code
                 && this.TaskNo == OtherTask.TaskNo
                 && this.DurationInDay == OtherTask.DurationInDay
                 && this.Predeccessors == OtherTask.Predeccessors
@@ -131,12 +134,13 @@ namespace ObjectsLibrary
             else
                 return this.Name == taskobj.Name
                 && this.ID == taskobj.ID
+                && this.Code == taskobj.Code
                 && this.TaskNo == taskobj.TaskNo
                 && this.DurationInDay == taskobj.DurationInDay
                 && this.Predeccessors == taskobj.Predeccessors
                 && this.Mode == taskobj.Mode
                 && this.Value == taskobj.Value
-                //&& this.Waste == taskobj.Waste
+                
                 && this.Resources.All(taskobj.Resources.Contains);
         }
         public override int GetHashCode()
@@ -151,7 +155,7 @@ namespace ObjectsLibrary
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Predeccessors) ? this.Predeccessors.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Mode) ? this.Mode.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Value) ? this.Value.GetHashCode() : 0);
-                //hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Waste) ? this.Waste.GetHashCode() : 0);
+                hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Code) ? this.Code.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Resources) ? this.Resources.GetHashCode() : 0);
                 return hash;
             }
