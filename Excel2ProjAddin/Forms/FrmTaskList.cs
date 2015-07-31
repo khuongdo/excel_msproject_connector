@@ -12,43 +12,28 @@ using BrightIdeasSoftware;
 using System.Reflection;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+
 namespace Excel2ProjAddin.Forms
 {
-    public partial class FrmTaskList : Form
+    public partial class frmTaskList : Form
     {
-
-
-        byte[] defaultstate;
-        public FrmTaskList(List<MSPTask> ListTask)
+        public frmTaskList(List<MSPTask> ListTask)
         {
             
             InitializeComponent();
+            PopulateTaskList(ListTask);
+            SaveTasks(ListTask);
+            Generator.GenerateColumns(olv_CombineList, typeof(MSPTask), false);
+            
+            
+        }
+        private void PopulateTaskList(List<MSPTask> ListTask)
+        {
             Generator.GenerateColumns(olvTasks, typeof(MSPTask), false);
             olvTasks.SetObjects(ListTask);
             olvTasks.AutoResizeColumns();
-            SaveTasks(ListTask);
-            defaultstate = olvTasks.SaveState();
-            //Resources list
             OLVColumn col = olvTasks.GetColumn(0);
             col.HeaderCheckBox = true;
-            Generator.GenerateColumns(olvResources, typeof(MSPResource), false);
-            
-        }
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void objectListView1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (olvTasks.SelectedIndex > -1)
-            {
-                List<MSPTask> list = LoadTasks();
-                int id = Convert.ToInt32(olvTasks.SelectedItem.Text);
-                
-                olvResources.SetObjects(list[id].Resources);
-                olvResources.AutoResizeColumns();
-            }
         }
         private void SaveTasks(List<MSPTask> Tasks)
         {
@@ -84,7 +69,6 @@ namespace Excel2ProjAddin.Forms
                 hl.FillBrush = new SolidBrush(Color.Yellow);
                 hl.CornerRoundness = 1.5f;
                 hl.FramePen = new Pen(Color.Red);
-                
                 olvTasks.DefaultRenderer = hl;
             }
             else
@@ -92,25 +76,56 @@ namespace Excel2ProjAddin.Forms
                 olvTasks.Refresh();
                 olvTasks.OwnerDraw = false;
             }
-                
         }
-
         // Context Menu
         private void btnCombine_Click(object sender, EventArgs e)
         {
             
-            ListViewItem item = new ListViewItem();
-            item.Text = "Nhập tên mới";
-            string temp = string.Empty;
-            if (olvTasks.CheckedObjects.Count >= 2)
+            if (olvTasks.CheckedIndices.Count >= 2)
             {
-                for (int i = 0; i < olvTasks.CheckedItems.Count; i++)
-                    temp += olvTasks.CheckedItems[i].Text + " ";
-                item.SubItems.Add(temp);
-                OLVListItem olvitem = new OLVListItem(item);
-                olv_CombineList.Items.Add(olvitem);
+                List<MSPTask> CurrTasksList = LoadTasks();
+                string NewName = CurrTasksList[Convert.ToInt32(olvTasks.SelectedItem.Text)].Name;
+                if (InputBox.Show("Kết hợp công tác", "Nhập tên công tác mới", ref NewName)
+                    == System.Windows.Forms.DialogResult.OK)
+                {
+                    
+                    List<MSPTask> combined_list = new List<MSPTask>();
+                    foreach (OLVListItem item in olvTasks.CheckedItems)
+                    {
+                        //Delete Task in List Task
+                        olvTasks.Items.Remove(item);
+                        combined_list.Add(CurrTasksList[Convert.ToInt32(item.Text)]);
+                    }
+                    olv_CombineList.AddObject(MSP_Methods.CombineTasks(NewName,combined_list));
+                    olv_CombineList.AutoResizeColumns();
+                }
             }
-            
+            else
+            {
+                MessageBox.Show("Vui lòng chọn từ 2 công tác trở lên");
+                return;
+            }
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Bạn có muốn tải lại danh sách công tác?", "Thông báo",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+            {
+                List<MSPTask> list = LoadTasks();
+                olvTasks.Clear();
+                PopulateTaskList(list);
+            }
+        }
+
+        private void olvTasks_DoubleClick(object sender, EventArgs e)
+        {
+            List<MSPTask> TasksList = LoadTasks();
+            if (olvTasks.SelectedIndex >= -1)
+            {
+                Forms.frmResources f = new frmResources(TasksList[olvTasks.SelectedIndex].Resources);
+                f.Show();
+            }
+                
         }
         
 

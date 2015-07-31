@@ -16,7 +16,7 @@ namespace Excel2ProjAddin
 
         private void btnCollectData_Click(object sender, RibbonControlEventArgs e)
         {
-            Forms.FrmTaskList f = new Forms.FrmTaskList(ExcelModule.CollectTasks());
+            Forms.frmTaskList f = new Forms.frmTaskList(ExcelModule.CollectTasks());
             f.Show();
         }
     }

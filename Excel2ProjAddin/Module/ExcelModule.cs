@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Globalization;
 using ObjectsLibrary;
 using Excel = Microsoft.Office.Interop.Excel;
 
@@ -44,7 +45,6 @@ namespace Excel2ProjAddin
                 {
                     MSPResource ResToAdd = new MSPResource()
                     {
-                        
                         Code = Convert.ToString(ResourceID),
                         Name = Convert.ToString(((Excel.Range)xlWS.Cells[r, 3]).Value2),
                         Unit = Convert.ToString(((Excel.Range)xlWS.Cells[r, 4]).Value2),
@@ -52,6 +52,11 @@ namespace Excel2ProjAddin
                         Value = Convert.ToDecimal(((Excel.Range)xlWS.Cells[r, 6]).Value2),
                         UnitPrice = Convert.ToInt32(((Excel.Range)xlWS.Cells[r, 7]).Value2),
                     };
+                    if (ResToAdd.Unit.ToUpper().Contains("CÔNG")
+                        || ResToAdd.Name.ToUpper().Contains("NHÂN CÔNG"))
+                        ResToAdd.Type = ResourceType.Work;
+                    else
+                        ResToAdd.Type = ResourceType.Material;
                     TaskToAdd.AddResource(ResToAdd);
                 }
                 else continue;

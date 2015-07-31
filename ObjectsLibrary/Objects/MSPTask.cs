@@ -51,6 +51,8 @@ namespace ObjectsLibrary
     [Serializable()]
     public class MSPTask
     {
+        [OLVColumn(IsVisible = false)]
+        public int GroupID { get; set; }
         [OLVColumn("ID",DisplayIndex = 0)]
         public int ID {get;set;}
         [OLVColumn("Mã số",DisplayIndex = 2,Width=50,TextAlign=HorizontalAlignment.Left)]

@@ -8,7 +8,43 @@ namespace ObjectsLibrary
 
     public class MSP_Methods
     {
+        public static MSPTask CombineTasks(string NewName, List<MSPTask> Tasks)
+        {
+            return CombineTasks_Compute(NewName, Tasks.ToArray());
+        }
         public static MSPTask CombineTasks(string NewName, params MSPTask[] Tasks)
+        {
+            //// Check whether user inputs one task
+            //if (Tasks.Count<MSPTask>() == 0)
+            //    return null;
+            //MSPTask NewTask = new MSPTask();
+            ////Task Name
+            //NewTask.Name = NewName;
+            ////Combine task value multiply with unit factor
+            //Array.ForEach(Tasks, x => NewTask.Value += x.Value * x.unit.Factor);
+            ////Combine Task ID
+            //NewTask.Code = Tasks.Select(i => i.Code).Aggregate((i, j) => i + "+" + j);
+            ////Task No
+            //NewTask.TaskNo = 1;
+            ////duration
+            //Array.ForEach(Tasks, x => NewTask.DurationInDay += x.DurationInDay);
+            ////Predeccessors
+            //NewTask.Predeccessors = string.Empty;
+            ////Combine Unit
+            //List<Unit> UnitFactorList = new List<Unit>();
+            //Array.ForEach(Tasks, x => UnitFactorList.Add(x.unit));
+            //NewTask.unit = UnitFactorList.Min();
+            ////Combine Resources
+            //List<MSPResource> newResources = new List<MSPResource>();
+            //foreach (MSPTask T in Tasks)
+            //{
+            //    T.Resources.ForEach(x => newResources.Add(x));
+            //}
+            //MergeResources(newResources).ForEach(x => NewTask.AddResource(x));
+            //return NewTask;
+            return CombineTasks_Compute(NewName, Tasks);
+        }
+        private static MSPTask CombineTasks_Compute(string NewName, MSPTask[] Tasks)
         {
             // Check whether user inputs one task
             if (Tasks.Count<MSPTask>() == 0)

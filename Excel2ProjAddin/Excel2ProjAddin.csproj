@@ -165,18 +165,28 @@
     can be found.
   -->
   <ItemGroup>
-    <Compile Include="Forms\FrmTaskList.cs">
+    <Compile Include="Forms\frmResources.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FrmTaskList.Designer.cs">
-      <DependentUpon>FrmTaskList.cs</DependentUpon>
+    <Compile Include="Forms\frmResources.Designer.cs">
+      <DependentUpon>frmResources.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frmTaskList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmTaskList.Designer.cs">
+      <DependentUpon>frmTaskList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="InputBox.cs" />
     <Compile Include="Module\ExcelModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <EmbeddedResource Include="Forms\FrmTaskList.resx">
-      <DependentUpon>FrmTaskList.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\frmResources.resx">
+      <DependentUpon>frmResources.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmTaskList.resx">
+      <DependentUpon>frmTaskList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -233,7 +243,12 @@
     <None Include="Resources\search-icon-512.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\kripto-clear-b.png" />
+    <None Include="Resources\kripto-clear-b.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Refresh-icon.png" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
