@@ -34,5 +34,17 @@ namespace Excel2ProjAddin.Properties {
                 this["TaskList"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CombinedTaskList {
+            get {
+                return ((string)(this["CombinedTaskList"]));
+            }
+            set {
+                this["CombinedTaskList"] = value;
+            }
+        }
     }
 }

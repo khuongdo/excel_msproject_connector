@@ -59,8 +59,14 @@ namespace Excel2ProjAddin
                         ResToAdd.Type = ResourceType.Material;
                     TaskToAdd.AddResource(ResToAdd);
                 }
-                else continue;
+                else
+                {
+                    
+                    continue;
+                }
             }
+            //Add last one
+            ListTasks.Add(TaskToAdd);
             return ListTasks;
         }   
     }

@@ -115,9 +115,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\ObjectListView.Official.2.8.1\lib\net20\ObjectListView.dll</HintPath>
     </Reference>
-    <Reference Include="SoftwareLocker">
-      <HintPath>..\SoftwareLocker.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
@@ -165,6 +162,12 @@
     can be found.
   -->
   <ItemGroup>
+    <Compile Include="Forms\frmGrouping.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmGrouping.Designer.cs">
+      <DependentUpon>frmGrouping.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frmResources.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -182,6 +185,9 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <EmbeddedResource Include="Forms\frmGrouping.resx">
+      <DependentUpon>frmGrouping.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmResources.resx">
       <DependentUpon>frmResources.cs</DependentUpon>
     </EmbeddedResource>

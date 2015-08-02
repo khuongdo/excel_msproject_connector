@@ -9,6 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Excel2ProjAddin", "Excel2Pr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "UnitTestProject1\Test.csproj", "{F38BFDBB-F50F-444B-BCB7-3DDB5856DEF9}"
 EndProject
+Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "Setup1", "Setup1\Setup1.isproj", "{88DF767D-5219-4266-9398-0CE91A240E38}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E6DFA261-CDE5-4BC3-B6ED-564C203AC500} = {E6DFA261-CDE5-4BC3-B6ED-564C203AC500}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CD_ROM|Any CPU = CD_ROM|Any CPU
@@ -48,6 +53,16 @@ Global
 		{F38BFDBB-F50F-444B-BCB7-3DDB5856DEF9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F38BFDBB-F50F-444B-BCB7-3DDB5856DEF9}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{F38BFDBB-F50F-444B-BCB7-3DDB5856DEF9}.SingleImage|Any CPU.Build.0 = Release|Any CPU
+		{88DF767D-5219-4266-9398-0CE91A240E38}.CD_ROM|Any CPU.ActiveCfg = CD_ROM
+		{88DF767D-5219-4266-9398-0CE91A240E38}.CD_ROM|Any CPU.Build.0 = CD_ROM
+		{88DF767D-5219-4266-9398-0CE91A240E38}.Debug|Any CPU.ActiveCfg = DVD-5
+		{88DF767D-5219-4266-9398-0CE91A240E38}.Debug|Any CPU.Build.0 = DVD-5
+		{88DF767D-5219-4266-9398-0CE91A240E38}.DVD-5|Any CPU.ActiveCfg = DVD-5
+		{88DF767D-5219-4266-9398-0CE91A240E38}.DVD-5|Any CPU.Build.0 = DVD-5
+		{88DF767D-5219-4266-9398-0CE91A240E38}.Release|Any CPU.ActiveCfg = SingleImage
+		{88DF767D-5219-4266-9398-0CE91A240E38}.Release|Any CPU.Build.0 = SingleImage
+		{88DF767D-5219-4266-9398-0CE91A240E38}.SingleImage|Any CPU.ActiveCfg = SingleImage
+		{88DF767D-5219-4266-9398-0CE91A240E38}.SingleImage|Any CPU.Build.0 = SingleImage
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

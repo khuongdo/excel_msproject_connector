@@ -19,21 +19,28 @@ namespace Excel2ProjAddin.Forms
     {
         public frmTaskList(List<MSPTask> ListTask)
         {
-            
+            Properties.Settings.Default.CombinedTaskList = string.Empty;
+            Properties.Settings.Default.TaskList = string.Empty;
             InitializeComponent();
             PopulateTaskList(ListTask);
             SaveTasks(ListTask);
-            Generator.GenerateColumns(olv_CombineList, typeof(MSPTask), false);
-            
-            
+            Generator.GenerateColumns(olvCombinedTasks, typeof(MSPTask), false);
         }
         private void PopulateTaskList(List<MSPTask> ListTask)
         {
             Generator.GenerateColumns(olvTasks, typeof(MSPTask), false);
             olvTasks.SetObjects(ListTask);
             olvTasks.AutoResizeColumns();
-            OLVColumn col = olvTasks.GetColumn(0);
-            col.HeaderCheckBox = true;
+
+            //Add checkbox to Column "ID"
+            OLVColumn colID = olvTasks.GetColumn(0);
+            colID.HeaderCheckBox = true;
+            //
+            OLVColumn colName = olvTasks.GetColumn(3);
+            colName.AspectName = "Name";
+            OLVColumn colCode = olvTasks.GetColumn(2);
+            colCode.AspectName = "Code";
+
         }
         private void SaveTasks(List<MSPTask> Tasks)
         {
@@ -48,6 +55,20 @@ namespace Excel2ProjAddin.Forms
                 Properties.Settings.Default.Save();
             }
         }
+        private void SaveCombined(List<MSPTask> Tasks)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+                bf.Serialize(ms, Tasks);
+                ms.Position = 0;
+                byte[] buffer = new byte[(int)ms.Length];
+                ms.Read(buffer, 0, buffer.Length);
+                Properties.Settings.Default.CombinedTaskList = Convert.ToBase64String(buffer);
+                Properties.Settings.Default.Save();
+            }
+        }
+
         private List<MSPTask> LoadTasks()
         {
             using (MemoryStream ms = new MemoryStream(Convert.FromBase64String
@@ -56,6 +77,21 @@ namespace Excel2ProjAddin.Forms
                 BinaryFormatter bf = new BinaryFormatter();
                 return (List<MSPTask>)bf.Deserialize(ms);
             }
+        }
+        private List<MSPTask> LoadCombinedTasks()
+        {
+            using (MemoryStream ms = new MemoryStream(Convert.FromBase64String
+                (Properties.Settings.Default.CombinedTaskList)))
+            {
+                if (ms.Length > 0)
+                {
+                    BinaryFormatter bf = new BinaryFormatter();
+                    return (List<MSPTask>)bf.Deserialize(ms);
+                }
+                else
+                    return null;
+            }
+            
         }
 
         private void tbSearch_TextChanged(object sender, EventArgs e)
@@ -71,39 +107,41 @@ namespace Excel2ProjAddin.Forms
                 hl.FramePen = new Pen(Color.Red);
                 olvTasks.DefaultRenderer = hl;
             }
-            else
-            {
-                olvTasks.Refresh();
-                olvTasks.OwnerDraw = false;
-            }
+            //else
+            //{
+            //    //olvTasks.Refresh();
+            //    olvTasks.OwnerDraw = false;
+            //}
         }
         // Context Menu
         private void btnCombine_Click(object sender, EventArgs e)
         {
-            
-            if (olvTasks.CheckedIndices.Count >= 2)
+            List<MSPTask> CurrTasksList = LoadTasks();
+            string NewName = CurrTasksList[Convert.ToInt32(olvTasks.SelectedItems[0].Text)].Name;
+            if (InputBox.Show("Kết hợp công tác", "Nhập tên công tác mới", ref NewName)
+                == System.Windows.Forms.DialogResult.OK)
             {
-                List<MSPTask> CurrTasksList = LoadTasks();
-                string NewName = CurrTasksList[Convert.ToInt32(olvTasks.SelectedItem.Text)].Name;
-                if (InputBox.Show("Kết hợp công tác", "Nhập tên công tác mới", ref NewName)
-                    == System.Windows.Forms.DialogResult.OK)
+                List<MSPTask> TasksToCombine = new List<MSPTask>();
+                foreach (OLVListItem item in olvTasks.CheckedItems)
                 {
-                    
-                    List<MSPTask> combined_list = new List<MSPTask>();
-                    foreach (OLVListItem item in olvTasks.CheckedItems)
-                    {
-                        //Delete Task in List Task
-                        olvTasks.Items.Remove(item);
-                        combined_list.Add(CurrTasksList[Convert.ToInt32(item.Text)]);
-                    }
-                    olv_CombineList.AddObject(MSP_Methods.CombineTasks(NewName,combined_list));
-                    olv_CombineList.AutoResizeColumns();
+                    //Delete Task in List Task
+                    olvTasks.Items.Remove(item);
+                    TasksToCombine.Add(CurrTasksList[Convert.ToInt32(item.Text)]);
                 }
-            }
-            else
-            {
-                MessageBox.Show("Vui lòng chọn từ 2 công tác trở lên");
-                return;
+                MSPTask CombinedTask = MSP_Methods.CombineTasks(NewName, TasksToCombine);// Tasks to be combined
+                //Save Combined Task to Disk
+                List<MSPTask> tempTasks = LoadCombinedTasks();
+                if (tempTasks == null)
+                    tempTasks = new List<MSPTask>();
+                CombinedTask.ID = tempTasks.Count;
+                CombinedTask.TaskNo = tempTasks.Count + 1;
+                tempTasks.Add(CombinedTask);
+                SaveCombined(tempTasks);
+
+                //Add to Combinedtasks view
+                olvCombinedTasks.AddObject(CombinedTask);
+                olvCombinedTasks.AutoResizeColumns();
+                olvCombinedTasks.Refresh();
             }
         }
         private void button1_Click(object sender, EventArgs e)
@@ -127,6 +165,35 @@ namespace Excel2ProjAddin.Forms
             }
                 
         }
+
+        private void olv_CombineList_DoubleClick(object sender, EventArgs e)
+        {
+            List<MSPTask> CombinedTasks = LoadCombinedTasks();
+            if (olvCombinedTasks.SelectedIndex >= -1)
+            {
+                Forms.frmResources f = new frmResources(CombinedTasks[Convert.ToInt32(olvCombinedTasks.SelectedItem.Text)].Resources);
+                f.Show();
+            }
+        }
+
+        private void olvTasks_CellEditFinishing(object sender, CellEditEventArgs e)
+        {
+          
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            List<MSPTask> EdittedTasks = new List<MSPTask>();
+            //olvTasks.SelectAll();
+            foreach (object item in olvTasks.Objects)
+            {
+                MSPTask temptask = item as MSPTask;
+                EdittedTasks.Add(temptask);
+            }
+            SaveTasks(EdittedTasks);
+            //olvTasks.CancelCellEdit();
+
+        }
         
 
        
@@ -136,3 +203,4 @@ namespace Excel2ProjAddin.Forms
     }
    
 }
+ 

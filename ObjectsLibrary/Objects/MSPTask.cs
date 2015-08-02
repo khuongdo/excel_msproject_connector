@@ -52,13 +52,14 @@ namespace ObjectsLibrary
     public class MSPTask
     {
         [OLVColumn(IsVisible = false)]
+        public int Worker { get; set; }
+        [OLVColumn(IsVisible = false)]
         public int GroupID { get; set; }
         [OLVColumn("ID",DisplayIndex = 0)]
         public int ID {get;set;}
-        [OLVColumn("Mã số",DisplayIndex = 2,Width=50,TextAlign=HorizontalAlignment.Left)]
+        [OLVColumn("Mã số",DisplayIndex = 2,Width=50,TextAlign=HorizontalAlignment.Left,IsEditable = true)]
         public string Code { get; set; }
         [OLVColumn("Tên công tác",DisplayIndex = 3,Width=250,TextAlign=HorizontalAlignment.Left)]
-       
         public string Name { get; set; }
         [OLVColumn(IsVisible = false)]
         public Unit unit { get; set; }
@@ -122,7 +123,6 @@ namespace ObjectsLibrary
                 && this.Predeccessors == OtherTask.Predeccessors
                 && this.Mode == OtherTask.Mode
                 && this.Value == OtherTask.Value
-                
                 && this.Resources == OtherTask.Resources;
 
         }

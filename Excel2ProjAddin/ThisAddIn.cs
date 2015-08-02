@@ -6,7 +6,7 @@ using System.Xml.Linq;
 using Excel = Microsoft.Office.Interop.Excel;
 using Office = Microsoft.Office.Core;
 using Microsoft.Office.Tools.Excel;
-using SoftwareLocker;
+
 
 namespace Excel2ProjAddin
 {
@@ -14,7 +14,7 @@ namespace Excel2ProjAddin
     {
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
-            
+        
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
