@@ -40,6 +40,7 @@ namespace Excel2ProjAddin
                         unit = new Unit(Convert.ToString(((Excel.Range)xlWS.Cells[r, 4]).Value2)),
                         Value = Convert.ToDouble(((Excel.Range)xlWS.Cells[r, 5]).Value2),
                     };
+                    TaskToAdd.UnitDescription = TaskToAdd.unit.FullName;
                 }
                 else if (ResourceID != null)
                 {

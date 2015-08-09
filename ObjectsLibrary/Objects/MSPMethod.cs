@@ -61,11 +61,12 @@ namespace ObjectsLibrary
             //duration
             Array.ForEach(Tasks, x => NewTask.DurationInDay += x.DurationInDay);
             //Predeccessors
-            NewTask.Predeccessors = string.Empty;
+            //NewTask.Predeccessors = string.Empty;
             //Combine Unit
             List<Unit> UnitFactorList = new List<Unit>();
             Array.ForEach(Tasks, x => UnitFactorList.Add(x.unit));
             NewTask.unit = UnitFactorList.Min();
+            NewTask.UnitDescription = NewTask.unit.FullName;
             //Combine Resources
             List<MSPResource> newResources = new List<MSPResource>();
             foreach (MSPTask T in Tasks)

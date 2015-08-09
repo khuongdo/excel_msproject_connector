@@ -15,32 +15,39 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Excel2ProjAddin.Forms
 {
-    public partial class frmTaskList : Form
+    public partial class frmMain : Form
     {
-        public frmTaskList(List<MSPTask> ListTask)
+        public frmMain(List<MSPTask> ListTask)
         {
             Properties.Settings.Default.CombinedTaskList = string.Empty;
             Properties.Settings.Default.TaskList = string.Empty;
             InitializeComponent();
+
+            //Panel
+            panelStep1.Visible = true;
+            //panelStep2.Visible = false;
+
+            //
             PopulateTaskList(ListTask);
-            SaveTasks(ListTask);
-            Generator.GenerateColumns(olvCombinedTasks, typeof(MSPTask), false);
+            PopulateCombinedTasks();
+
+            
         }
         private void PopulateTaskList(List<MSPTask> ListTask)
         {
             Generator.GenerateColumns(olvTasks, typeof(MSPTask), false);
             olvTasks.SetObjects(ListTask);
-            olvTasks.AutoResizeColumns();
+            olvTasks.Columns.RemoveAt(5);
+            olvTasks.AllColumns[0].HeaderCheckBox = true;
 
-            //Add checkbox to Column "ID"
-            OLVColumn colID = olvTasks.GetColumn(0);
-            colID.HeaderCheckBox = true;
-            //
-            OLVColumn colName = olvTasks.GetColumn(3);
-            colName.AspectName = "Name";
-            OLVColumn colCode = olvTasks.GetColumn(2);
-            colCode.AspectName = "Code";
+            
+            SaveTasks(ListTask);
 
+        }
+        private void PopulateCombinedTasks()
+        {
+            Generator.GenerateColumns(olvCombinedTasks, typeof(MSPTask), false);
+            
         }
         private void SaveTasks(List<MSPTask> Tasks)
         {
@@ -116,32 +123,44 @@ namespace Excel2ProjAddin.Forms
         // Context Menu
         private void btnCombine_Click(object sender, EventArgs e)
         {
+            //Check if no task is selected
+            if (olvTasks.CheckedObjects.Count == 0)
+                return;
+
+            //Check if tasks can not be combined
+            List<string> Unit = new List<string>();
+            foreach (MSPTask item in olvTasks.CheckedObjects)
+            {
+                Unit.Add(item.unit.Name);
+            }
+            if (Unit.Distinct().Count() > 1)
+            {
+                MessageBox.Show("Không thể kết hợp công tác khác đơn vị");
+                return;
+            }
+                
             List<MSPTask> CurrTasksList = LoadTasks();
-            string NewName = CurrTasksList[Convert.ToInt32(olvTasks.SelectedItems[0].Text)].Name;
+            string NewName = ((MSPTask)olvTasks.CheckedObjects[0]).Name;
             if (InputBox.Show("Kết hợp công tác", "Nhập tên công tác mới", ref NewName)
                 == System.Windows.Forms.DialogResult.OK)
             {
                 List<MSPTask> TasksToCombine = new List<MSPTask>();
-                foreach (OLVListItem item in olvTasks.CheckedItems)
+                foreach (MSPTask item in olvTasks.CheckedObjects)
                 {
                     //Delete Task in List Task
-                    olvTasks.Items.Remove(item);
-                    TasksToCombine.Add(CurrTasksList[Convert.ToInt32(item.Text)]);
+                    olvTasks.RemoveObject(item);
+                    TasksToCombine.Add(item);
                 }
                 MSPTask CombinedTask = MSP_Methods.CombineTasks(NewName, TasksToCombine);// Tasks to be combined
                 //Save Combined Task to Disk
-                List<MSPTask> tempTasks = LoadCombinedTasks();
-                if (tempTasks == null)
-                    tempTasks = new List<MSPTask>();
-                CombinedTask.ID = tempTasks.Count;
-                CombinedTask.TaskNo = tempTasks.Count + 1;
-                tempTasks.Add(CombinedTask);
-                SaveCombined(tempTasks);
+                List<MSPTask> CombinedTasks = LoadCombinedTasks() ?? new List<MSPTask>();
+                CombinedTask.ID = CombinedTasks.Count;
+                CombinedTask.TaskNo = CombinedTasks.Count + 1;
+                CombinedTasks.Add(CombinedTask);
+                SaveCombined(CombinedTasks);
 
-                //Add to Combinedtasks view
+                //Add new Item and Resize olvcombined Columns
                 olvCombinedTasks.AddObject(CombinedTask);
-                olvCombinedTasks.AutoResizeColumns();
-                olvCombinedTasks.Refresh();
             }
         }
         private void button1_Click(object sender, EventArgs e)
@@ -168,12 +187,12 @@ namespace Excel2ProjAddin.Forms
 
         private void olv_CombineList_DoubleClick(object sender, EventArgs e)
         {
+            if (olvCombinedTasks.SelectedIndex == -1)
+                return;
             List<MSPTask> CombinedTasks = LoadCombinedTasks();
-            if (olvCombinedTasks.SelectedIndex >= -1)
-            {
-                Forms.frmResources f = new frmResources(CombinedTasks[Convert.ToInt32(olvCombinedTasks.SelectedItem.Text)].Resources);
-                f.Show();
-            }
+            Forms.frmResources f = new frmResources(CombinedTasks[Convert.ToInt32(olvCombinedTasks.SelectedItem.Text)].Resources);
+            f.Show();
+        
         }
 
         private void olvTasks_CellEditFinishing(object sender, CellEditEventArgs e)
@@ -181,19 +200,81 @@ namespace Excel2ProjAddin.Forms
           
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        private void btnNextStep2_Click(object sender, EventArgs e)
         {
-            List<MSPTask> EdittedTasks = new List<MSPTask>();
-            //olvTasks.SelectAll();
-            foreach (object item in olvTasks.Objects)
+            if (olvCombinedTasks.Objects != null)
             {
-                MSPTask temptask = item as MSPTask;
-                EdittedTasks.Add(temptask);
+                List<MSPTask> CombinedTasks = olvCombinedTasks.Objects as List<MSPTask>;
+                SaveCombined(CombinedTasks);
+                
             }
-            SaveTasks(EdittedTasks);
-            //olvTasks.CancelCellEdit();
-
+            else
+            {
+                if (MessageBox.Show("Chọn tất cả các công tác cột bên trái?", "Thông báo", MessageBoxButtons.OKCancel, MessageBoxIcon.Question)
+                    == System.Windows.Forms.DialogResult.OK)
+                {
+                    Properties.Settings.Default.CombinedTaskList = Properties.Settings.Default.TaskList;
+                    Properties.Settings.Default.Save();
+                }
+            }
+            panelStep1.Visible = false;
         }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            if (olvCombinedTasks.Items.Count == 0)
+                return;
+            List<MSPTask> CombinedTasks = new List<MSPTask>();
+            foreach (object obj in olvCombinedTasks.Objects)
+                CombinedTasks.Add(obj as MSPTask);
+            
+            SaveCombined(CombinedTasks);
+        }
+
+        private void cmAdd_Click(object sender, EventArgs e)
+        {
+            if (olvTasks.CheckedObjects.Count == 0)
+                return;
+            //Load tasks
+            List<MSPTask> CurrTasksList = LoadTasks();
+            List<MSPTask> CombinedTasks = LoadCombinedTasks() ?? new List<MSPTask>();
+            foreach (MSPTask item in olvTasks.CheckedObjects)
+            {
+                //Delete Task in List Task
+                olvTasks.RemoveObject(item);
+                MSPTask TaskToAdd = item;
+                //Add selected item to CombinedList
+                TaskToAdd.ID = CombinedTasks.Count;
+                TaskToAdd.TaskNo = CombinedTasks.Count + 1;
+                CombinedTasks.Add(TaskToAdd);
+
+                //Add to olvCombinedTasks
+                olvCombinedTasks.AddObject(item);
+            }
+            
+            SaveCombined(CombinedTasks);
+        }
+
+        private void cmChoosePredecessor_Click(object sender, EventArgs e)
+        {
+            //Subtract selected object
+            
+            if (olvCombinedTasks.SelectedIndex == -1)
+            {
+                return;
+            }
+            MSPTask TaskObjToRemove;
+            TaskObjToRemove = olvCombinedTasks.SelectedObject as MSPTask;
+            List<MSPTask> TasksToPopulate = LoadCombinedTasks();
+            TasksToPopulate.Remove(TaskObjToRemove);
+            Forms.frmChoosePredecessor f = new frmChoosePredecessor(TasksToPopulate);
+            f.Show();
+        }
+
+        
+
+       
+       
         
 
        

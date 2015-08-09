@@ -162,6 +162,12 @@
     can be found.
   -->
   <ItemGroup>
+    <Compile Include="Forms\frmChoosePredecessor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmChoosePredecessor.Designer.cs">
+      <DependentUpon>frmChoosePredecessor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frmGrouping.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -174,25 +180,28 @@
     <Compile Include="Forms\frmResources.Designer.cs">
       <DependentUpon>frmResources.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmTaskList.cs">
+    <Compile Include="Forms\frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmTaskList.Designer.cs">
-      <DependentUpon>frmTaskList.cs</DependentUpon>
+    <Compile Include="Forms\frmMain.Designer.cs">
+      <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
     <Compile Include="InputBox.cs" />
     <Compile Include="Module\ExcelModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <EmbeddedResource Include="Forms\frmChoosePredecessor.resx">
+      <DependentUpon>frmChoosePredecessor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmGrouping.resx">
       <DependentUpon>frmGrouping.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmResources.resx">
       <DependentUpon>frmResources.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmTaskList.resx">
-      <DependentUpon>frmTaskList.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\frmMain.resx">
+      <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -255,6 +264,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Refresh-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1438627383_vector_66_12.png" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

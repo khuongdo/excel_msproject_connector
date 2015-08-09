@@ -63,6 +63,16 @@ namespace Excel2ProjAddin.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _1438627383_vector_66_12 {
+            get {
+                object obj = ResourceManager.GetObject("1438627383_vector_66_12", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap kripto_clear_b {
             get {
                 object obj = ResourceManager.GetObject("kripto-clear-b", resourceCulture);

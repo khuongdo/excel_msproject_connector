@@ -11,6 +11,20 @@ using System.Windows.Forms;
 
 namespace ObjectsLibrary
 {
+    [Serializable()]
+    public class Predecessor
+    {
+        public string PrecessorTask { get; set; }
+        [OLVColumn("Link Type",ImageAspectName = "LinkType")]
+        public MSProject.PjTaskLinkType LinkType { get; set; }
+        public int Lag { get; set; }
+        public Predecessor(string _Precessor,MSProject.PjTaskLinkType _Type,int _Lag)
+        {
+            this.PrecessorTask = _Precessor;
+            this.LinkType = _Type;
+            this.Lag = _Lag;
+        }
+    }
    [Serializable()]
     public class Unit:IComparable<Unit>
     {
@@ -42,6 +56,10 @@ namespace ObjectsLibrary
             else
                 return 0;
         }
+        public override string ToString()
+        {
+            return this.FullName;
+        }
     }
     public enum TaskMode
     {
@@ -51,33 +69,40 @@ namespace ObjectsLibrary
     [Serializable()]
     public class MSPTask
     {
-        [OLVColumn(IsVisible = false)]
+
+        [OLVColumn("Nhân công")]
+        
         public int Worker { get; set; }
         [OLVColumn(IsVisible = false)]
+        
         public int GroupID { get; set; }
-        [OLVColumn("ID",DisplayIndex = 0)]
+        [OLVColumn("ID",IsVisible =false)]
+        
         public int ID {get;set;}
-        [OLVColumn("Mã số",DisplayIndex = 2,Width=50,TextAlign=HorizontalAlignment.Left,IsEditable = true)]
+        [OLVColumn("Mã",DisplayIndex = 1,Width=60,TextAlign=HorizontalAlignment.Left,IsEditable = false)]
+        
         public string Code { get; set; }
-        [OLVColumn("Tên công tác",DisplayIndex = 3,Width=250,TextAlign=HorizontalAlignment.Left)]
+        [OLVColumn("Tên công tác",DisplayIndex = 2,Width=350,TextAlign=HorizontalAlignment.Left)]
         public string Name { get; set; }
-        [OLVColumn(IsVisible = false)]
         public Unit unit { get; set; }
-        [OLVColumn("Khối lượng",DisplayIndex =4,Width=50,TextAlign=HorizontalAlignment.Left)]
+        [OLVColumn("ĐV",DisplayIndex = 3,Width = 50,TextAlign = HorizontalAlignment.Center,IsEditable = false)]
+
+        public string UnitDescription { get; set; }
+        [OLVColumn("Khối lượng",DisplayIndex = 4,Width=50,TextAlign=HorizontalAlignment.Left,IsEditable = false)]
         public double Value { get; set; }
         [OLVColumn(IsVisible=false)]
         public List<MSPResource> Resources { get; set; }
-        [OLVColumn("STT",DisplayIndex=1,Width=20,TextAlign=HorizontalAlignment.Left)]
+        [OLVColumn("STT",DisplayIndex = 0,Width=50,TextAlign=HorizontalAlignment.Left)]
         public int TaskNo { get; set; }
       
-        [OLVColumn("Thời gian",DisplayIndex=5,Width=30,TextAlign=HorizontalAlignment.Left)]
+        [OLVColumn(IsVisible = false)]
         public int DurationInDay { get; set; }
         [OLVColumn(IsVisible=false)]
-        public string Predeccessors { get; set; }
-        [OLVColumn("Chế độ",DisplayIndex=6,Width=50,TextAlign= HorizontalAlignment.Left)]
+        public List<Predecessor> Predeccessors { get; set; }
+        [OLVColumn(IsVisible = false)]
         public TaskMode Mode { get; set; }
         public MSPTask(int _ID,string _Code, string _Name,double _value, int _TaskNo, int _Duration,
-                            string _Predecessors, List<MSPResource> _Resources, TaskMode _Mode = TaskMode.AutoSchedule)
+                             List<MSPResource> _Resources, TaskMode _Mode = TaskMode.AutoSchedule)
         {
             this.Resources = new List<MSPResource>();
             this.ID = _ID;
@@ -86,7 +111,7 @@ namespace ObjectsLibrary
             this.TaskNo = _TaskNo;
             this.DurationInDay = _Duration;
             this.Value = _value;
-            this.Predeccessors = _Predecessors;
+            
             this.Resources = _Resources;
             this.Mode = _Mode;
             
@@ -147,6 +172,7 @@ namespace ObjectsLibrary
         }
         public override int GetHashCode()
         {
+            
             unchecked
             {
                 int hash = 17;
