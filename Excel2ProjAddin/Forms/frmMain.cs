@@ -12,6 +12,7 @@ using BrightIdeasSoftware;
 using System.Reflection;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using MSproject = Microsoft.Office.Interop.MSProject;
 
 namespace Excel2ProjAddin.Forms
 {
@@ -37,16 +38,15 @@ namespace Excel2ProjAddin.Forms
         {
             Generator.GenerateColumns(olvTasks, typeof(MSPTask), false);
             olvTasks.SetObjects(ListTask);
-            olvTasks.Columns.RemoveAt(5);
+            olvTasks.Columns.RemoveAt(6);
             olvTasks.AllColumns[0].HeaderCheckBox = true;
-
-            
             SaveTasks(ListTask);
 
         }
         private void PopulateCombinedTasks()
         {
             Generator.GenerateColumns(olvCombinedTasks, typeof(MSPTask), false);
+            
             
         }
         private void SaveTasks(List<MSPTask> Tasks)
@@ -174,85 +174,33 @@ namespace Excel2ProjAddin.Forms
             }
         }
 
-        private void olvTasks_DoubleClick(object sender, EventArgs e)
-        {
-            List<MSPTask> TasksList = LoadTasks();
-            if (olvTasks.SelectedIndex >= -1)
-            {
-                Forms.frmResources f = new frmResources(TasksList[olvTasks.SelectedIndex].Resources);
-                f.Show();
-            }
-                
-        }
+       
 
-        private void olv_CombineList_DoubleClick(object sender, EventArgs e)
-        {
-            if (olvCombinedTasks.SelectedIndex == -1)
-                return;
-            List<MSPTask> CombinedTasks = LoadCombinedTasks();
-            Forms.frmResources f = new frmResources(CombinedTasks[Convert.ToInt32(olvCombinedTasks.SelectedItem.Text)].Resources);
-            f.Show();
         
-        }
-
-        private void olvTasks_CellEditFinishing(object sender, CellEditEventArgs e)
-        {
-          
-        }
-
-        private void btnNextStep2_Click(object sender, EventArgs e)
-        {
-            if (olvCombinedTasks.Objects != null)
-            {
-                List<MSPTask> CombinedTasks = olvCombinedTasks.Objects as List<MSPTask>;
-                SaveCombined(CombinedTasks);
-                
-            }
-            else
-            {
-                if (MessageBox.Show("Chọn tất cả các công tác cột bên trái?", "Thông báo", MessageBoxButtons.OKCancel, MessageBoxIcon.Question)
-                    == System.Windows.Forms.DialogResult.OK)
-                {
-                    Properties.Settings.Default.CombinedTaskList = Properties.Settings.Default.TaskList;
-                    Properties.Settings.Default.Save();
-                }
-            }
-            panelStep1.Visible = false;
-        }
-
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (olvCombinedTasks.Items.Count == 0)
-                return;
-            List<MSPTask> CombinedTasks = new List<MSPTask>();
-            foreach (object obj in olvCombinedTasks.Objects)
-                CombinedTasks.Add(obj as MSPTask);
-            
-            SaveCombined(CombinedTasks);
+            //if (olvCombinedTasks.Items.Count == 0)
+            //    return;
+            //List<MSPTask> CombinedTasks = new List<MSPTask>();
+            //foreach (object obj in olvCombinedTasks.Objects)
+            //    CombinedTasks.Add(obj as MSPTask);
+            //SaveCombined(CombinedTasks);
         }
 
         private void cmAdd_Click(object sender, EventArgs e)
         {
             if (olvTasks.CheckedObjects.Count == 0)
                 return;
-            //Load tasks
-            List<MSPTask> CurrTasksList = LoadTasks();
-            List<MSPTask> CombinedTasks = LoadCombinedTasks() ?? new List<MSPTask>();
+            
             foreach (MSPTask item in olvTasks.CheckedObjects)
             {
                 //Delete Task in List Task
                 olvTasks.RemoveObject(item);
-                MSPTask TaskToAdd = item;
-                //Add selected item to CombinedList
-                TaskToAdd.ID = CombinedTasks.Count;
-                TaskToAdd.TaskNo = CombinedTasks.Count + 1;
-                CombinedTasks.Add(TaskToAdd);
-
-                //Add to olvCombinedTasks
+               
                 olvCombinedTasks.AddObject(item);
             }
             
-            SaveCombined(CombinedTasks);
+         
         }
 
         private void cmChoosePredecessor_Click(object sender, EventArgs e)
@@ -271,16 +219,139 @@ namespace Excel2ProjAddin.Forms
             f.Show();
         }
 
+        private void olvCombinedTasks_CellEditFinishing(object sender, CellEditEventArgs e)
+        {
+            ObjectListView olv = (ObjectListView)sender;
+            MSPTask CurrTask = (MSPTask)e.RowObject;
+            if (e.Column == olv.GetColumn("Nhân công"))
+            {
+                
+                CurrTask.Worker = (int)e.NewValue;
+                CalculateDuration(ref CurrTask);
+                
+            }
+            if (e.Column == olv.GetColumn("Predecessors"))
+            {
+                CurrTask.Predeccessors = (string)e.NewValue;
+                
+            }
+            olv.UpdateObject(CurrTask);
+        }
+        private void CalculateDuration(ref MSPTask Task)
+        {
+            if (Task.Worker == 0)
+                return;
+            double WorkerQuota = Task.Resources.Single(x => x.Type == ResourceType.Work).Assess;
+            Task.DurationInDay = Math.Ceiling(2 * Task.Value * WorkerQuota / Task.Worker) / 2;
+
+        }
+
+        private void btnGroup_Click(object sender, EventArgs e)
+        {
+            olvCombinedTasks.ShowGroups = olvCombinedTasks.ShowGroups == true ? false : true;
+            
+        }
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        #region Navigator buttons
+        private void btnUp_Click(object sender, EventArgs e)
+        {
+            if (olvCombinedTasks.SelectedIndex == -1)
+                return;
+            
+        }
+
+        private void btnDown_Click(object sender, EventArgs e)
+        {
+            if (olvCombinedTasks.SelectedIndex == -1)
+                return;
+        }
+        #endregion
+
+        private void resourcesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (olvCombinedTasks.SelectedIndex == -1)
+                return;
+            MSPTask selectedtask = (MSPTask)olvCombinedTasks.SelectedObject;
+            Forms.frmResources f = new frmResources(selectedtask.Resources);
+            f.Show();
+        }
+
+        private void resourcesToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            if (olvTasks.SelectedIndex == -1)
+                return;
+            MSPTask task = (MSPTask)olvTasks.SelectedObject;
+            Forms.frmResources f = new frmResources(task.Resources);
+            f.Show();
+        }
+
         
 
-       
-       
-        
+        #region
+        private void btnExportPj_Click(object sender, EventArgs e)
+        {
+            //btnExportPj.Enabled = false;
+            List<MSPTask> Tasks = olvCombinedTasks.Objects.Cast<MSPTask>().ToList();
+            backgroundWorker_ExportPj.RunWorkerAsync(Tasks);
+        }
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            backgroundWorker_ExportPj.CancelAsync();
+        }
+        private void backgroundWorker_ExportPj_DoWork(object sender, DoWorkEventArgs e)
+        {
+            List<MSPTask> Tasks = (List<MSPTask>)e.Argument;
+            Tasks.Sort();
+            BackgroundWorker bgwsender = (BackgroundWorker)sender;
+            MSproject.Application PjApp = new MSproject.Application();
+            MSproject.Project PjProject = PjApp.Projects.Add();
+            foreach (MSPTask task in Tasks)
+            {
+                if (!bgwsender.CancellationPending)
+                {
+                    bgwsender.ReportProgress(1, "Đang xuất công tác: " + task.TaskNo);
+                    ExportToMSP.ExportByTask(PjProject, task);
+                }
+                else
+                {
+                    bgwsender.ReportProgress(1, "Dừng bởi người dùng");
+                    PjApp.Quit(MSproject.PjSaveType.pjDoNotSave);
+                    e.Cancel = true;
+                    return;
+                }
+            }
+            bgwsender.ReportProgress(1, "Hoàn tất");
+            PjApp.Visible = true;
+        }
+        private void backgroundWorker_ExportPj_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            statusLabel.Text = (string)e.UserState;
+        }
+
+        private void backgroundWorker_ExportPj_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            //btnExportPj.Enabled = true;
+        }
+        #endregion
 
        
 
-       
         
+
+
+
+
+
+
+
+
+
+
     }
    
 }

@@ -43,13 +43,24 @@ namespace Excel2ProjAddin.Forms
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tbSearch = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.btnDown = new System.Windows.Forms.Button();
+            this.btnUp = new System.Windows.Forms.Button();
+            this.btnGroup = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.olvCombinedTasks = new BrightIdeasSoftware.ObjectListView();
             this.contextMenuRight = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmChoosePredecessor = new System.Windows.Forms.ToolStripMenuItem();
+            this.resourcesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label2 = new System.Windows.Forms.Label();
             this.panelStep1 = new System.Windows.Forms.Panel();
-            this.btnNextStep2 = new System.Windows.Forms.Button();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.btnExit = new System.Windows.Forms.Button();
+            this.btnExportPj = new System.Windows.Forms.Button();
+            this.resourcesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.backgroundWorker_ExportPj = new System.ComponentModel.BackgroundWorker();
+            this.btnStop = new System.Windows.Forms.Button();
             this.contextMenuLeft.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -58,30 +69,33 @@ namespace Excel2ProjAddin.Forms
             ((System.ComponentModel.ISupportInitialize)(this.olvTasks)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.olvCombinedTasks)).BeginInit();
             this.contextMenuRight.SuspendLayout();
             this.panelStep1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // contextMenuLeft
             // 
             this.contextMenuLeft.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cmCombine,
-            this.cmAdd});
+            this.cmAdd,
+            this.resourcesToolStripMenuItem1});
             this.contextMenuLeft.Name = "contextMenu";
-            this.contextMenuLeft.Size = new System.Drawing.Size(116, 48);
+            this.contextMenuLeft.Size = new System.Drawing.Size(128, 70);
             // 
             // cmCombine
             // 
             this.cmCombine.Name = "cmCombine";
-            this.cmCombine.Size = new System.Drawing.Size(115, 22);
+            this.cmCombine.Size = new System.Drawing.Size(127, 22);
             this.cmCombine.Text = "Kết hợp";
             this.cmCombine.Click += new System.EventHandler(this.btnCombine_Click);
             // 
             // cmAdd
             // 
             this.cmAdd.Name = "cmAdd";
-            this.cmAdd.Size = new System.Drawing.Size(115, 22);
+            this.cmAdd.Size = new System.Drawing.Size(127, 22);
             this.cmAdd.Text = "Thêm";
             this.cmAdd.Click += new System.EventHandler(this.cmAdd_Click);
             // 
@@ -103,11 +117,13 @@ namespace Excel2ProjAddin.Forms
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.panel2);
+            this.splitContainer1.Panel2.Controls.Add(this.btnGroup);
             this.splitContainer1.Panel2.Controls.Add(this.btnSave);
             this.splitContainer1.Panel2.Controls.Add(this.olvCombinedTasks);
             this.splitContainer1.Panel2.Controls.Add(this.label2);
-            this.splitContainer1.Size = new System.Drawing.Size(822, 420);
-            this.splitContainer1.SplitterDistance = 419;
+            this.splitContainer1.Size = new System.Drawing.Size(822, 362);
+            this.splitContainer1.SplitterDistance = 369;
             this.splitContainer1.TabIndex = 8;
             // 
             // btnRefresh
@@ -135,14 +151,12 @@ namespace Excel2ProjAddin.Forms
             this.olvTasks.Name = "olvTasks";
             this.olvTasks.OwnerDraw = true;
             this.olvTasks.ShowGroups = false;
-            this.olvTasks.Size = new System.Drawing.Size(418, 380);
+            this.olvTasks.Size = new System.Drawing.Size(368, 322);
             this.olvTasks.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.olvTasks.TabIndex = 11;
             this.olvTasks.UseCompatibleStateImageBehavior = false;
             this.olvTasks.UseFiltering = true;
             this.olvTasks.View = System.Windows.Forms.View.Details;
-            this.olvTasks.CellEditFinishing += new BrightIdeasSoftware.CellEditEventHandler(this.olvTasks_CellEditFinishing);
-            this.olvTasks.DoubleClick += new System.EventHandler(this.olvTasks_DoubleClick);
             // 
             // panel1
             // 
@@ -150,7 +164,7 @@ namespace Excel2ProjAddin.Forms
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Controls.Add(this.tbSearch);
             this.panel1.Enabled = false;
-            this.panel1.Location = new System.Drawing.Point(225, 6);
+            this.panel1.Location = new System.Drawing.Point(175, 6);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(189, 31);
             this.panel1.TabIndex = 10;
@@ -188,11 +202,58 @@ namespace Excel2ProjAddin.Forms
             this.label1.TabIndex = 7;
             this.label1.Text = "Danh sách công tác:";
             // 
+            // panel2
+            // 
+            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.panel2.Controls.Add(this.btnDown);
+            this.panel2.Controls.Add(this.btnUp);
+            this.panel2.Location = new System.Drawing.Point(0, 0);
+            this.panel2.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(38, 360);
+            this.panel2.TabIndex = 11;
+            // 
+            // btnDown
+            // 
+            this.btnDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDown.BackgroundImage = global::Excel2ProjAddin.Properties.Resources._1439670537_arrow_full_down;
+            this.btnDown.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnDown.Location = new System.Drawing.Point(3, 175);
+            this.btnDown.Name = "btnDown";
+            this.btnDown.Size = new System.Drawing.Size(32, 32);
+            this.btnDown.TabIndex = 11;
+            this.btnDown.UseVisualStyleBackColor = true;
+            this.btnDown.Click += new System.EventHandler(this.btnDown_Click);
+            // 
+            // btnUp
+            // 
+            this.btnUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnUp.BackgroundImage = global::Excel2ProjAddin.Properties.Resources._1439670530_arrow_full_up;
+            this.btnUp.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnUp.Location = new System.Drawing.Point(2, 129);
+            this.btnUp.Name = "btnUp";
+            this.btnUp.Size = new System.Drawing.Size(33, 32);
+            this.btnUp.TabIndex = 10;
+            this.btnUp.UseVisualStyleBackColor = true;
+            this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
+            // 
+            // btnGroup
+            // 
+            this.btnGroup.BackgroundImage = global::Excel2ProjAddin.Properties.Resources.images;
+            this.btnGroup.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnGroup.Location = new System.Drawing.Point(270, 6);
+            this.btnGroup.Name = "btnGroup";
+            this.btnGroup.Size = new System.Drawing.Size(31, 29);
+            this.btnGroup.TabIndex = 9;
+            this.btnGroup.UseVisualStyleBackColor = true;
+            this.btnGroup.Click += new System.EventHandler(this.btnGroup_Click);
+            // 
             // btnSave
             // 
             this.btnSave.BackgroundImage = global::Excel2ProjAddin.Properties.Resources._1438627383_vector_66_12;
             this.btnSave.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnSave.Location = new System.Drawing.Point(192, 6);
+            this.btnSave.Location = new System.Drawing.Point(235, 7);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(29, 29);
             this.btnSave.TabIndex = 8;
@@ -201,32 +262,36 @@ namespace Excel2ProjAddin.Forms
             // 
             // olvCombinedTasks
             // 
+            this.olvCombinedTasks.AllowDrop = true;
             this.olvCombinedTasks.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.olvCombinedTasks.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.SingleClick;
+            this.olvCombinedTasks.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.DoubleClick;
             this.olvCombinedTasks.CellEditEnterChangesRows = true;
             this.olvCombinedTasks.ContextMenuStrip = this.contextMenuRight;
             this.olvCombinedTasks.FullRowSelect = true;
             this.olvCombinedTasks.GridLines = true;
             this.olvCombinedTasks.HeaderWordWrap = true;
-            this.olvCombinedTasks.Location = new System.Drawing.Point(2, 37);
+            this.olvCombinedTasks.IsSimpleDragSource = true;
+            this.olvCombinedTasks.IsSimpleDropSink = true;
+            this.olvCombinedTasks.Location = new System.Drawing.Point(41, 37);
             this.olvCombinedTasks.MultiSelect = false;
             this.olvCombinedTasks.Name = "olvCombinedTasks";
             this.olvCombinedTasks.SelectColumnsOnRightClickBehaviour = BrightIdeasSoftware.ObjectListView.ColumnSelectBehaviour.Submenu;
             this.olvCombinedTasks.ShowGroups = false;
-            this.olvCombinedTasks.Size = new System.Drawing.Size(392, 381);
+            this.olvCombinedTasks.Size = new System.Drawing.Size(403, 323);
             this.olvCombinedTasks.TabIndex = 0;
             this.olvCombinedTasks.UseCompatibleStateImageBehavior = false;
             this.olvCombinedTasks.View = System.Windows.Forms.View.Details;
-            this.olvCombinedTasks.DoubleClick += new System.EventHandler(this.olv_CombineList_DoubleClick);
+            this.olvCombinedTasks.CellEditFinishing += new BrightIdeasSoftware.CellEditEventHandler(this.olvCombinedTasks_CellEditFinishing);
             // 
             // contextMenuRight
             // 
             this.contextMenuRight.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.cmChoosePredecessor});
+            this.cmChoosePredecessor,
+            this.resourcesToolStripMenuItem});
             this.contextMenuRight.Name = "contextMenuRight";
-            this.contextMenuRight.Size = new System.Drawing.Size(170, 26);
+            this.contextMenuRight.Size = new System.Drawing.Size(170, 48);
             this.contextMenuRight.Text = "Chọn";
             // 
             // cmChoosePredecessor
@@ -236,10 +301,17 @@ namespace Excel2ProjAddin.Forms
             this.cmChoosePredecessor.Text = "Chọn Predecessor";
             this.cmChoosePredecessor.Click += new System.EventHandler(this.cmChoosePredecessor_Click);
             // 
+            // resourcesToolStripMenuItem
+            // 
+            this.resourcesToolStripMenuItem.Name = "resourcesToolStripMenuItem";
+            this.resourcesToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.resourcesToolStripMenuItem.Text = "Resources";
+            this.resourcesToolStripMenuItem.Click += new System.EventHandler(this.resourcesToolStripMenuItem_Click);
+            // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 15);
+            this.label2.Location = new System.Drawing.Point(52, 15);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(183, 13);
             this.label2.TabIndex = 7;
@@ -250,27 +322,83 @@ namespace Excel2ProjAddin.Forms
             this.panelStep1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panelStep1.Controls.Add(this.btnNextStep2);
+            this.panelStep1.Controls.Add(this.btnStop);
+            this.panelStep1.Controls.Add(this.statusStrip1);
+            this.panelStep1.Controls.Add(this.btnExit);
+            this.panelStep1.Controls.Add(this.btnExportPj);
             this.panelStep1.Controls.Add(this.splitContainer1);
             this.panelStep1.Location = new System.Drawing.Point(0, 2);
             this.panelStep1.Name = "panelStep1";
-            this.panelStep1.Size = new System.Drawing.Size(822, 464);
+            this.panelStep1.Size = new System.Drawing.Size(822, 441);
             this.panelStep1.TabIndex = 9;
             // 
-            // btnNextStep2
+            // statusStrip1
             // 
-            this.btnNextStep2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnNextStep2.Location = new System.Drawing.Point(735, 429);
-            this.btnNextStep2.Name = "btnNextStep2";
-            this.btnNextStep2.Size = new System.Drawing.Size(75, 23);
-            this.btnNextStep2.TabIndex = 9;
-            this.btnNextStep2.Text = "Tiếp tục>>";
-            this.btnNextStep2.UseVisualStyleBackColor = true;
-            this.btnNextStep2.Click += new System.EventHandler(this.btnNextStep2_Click);
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusLabel});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 419);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(822, 22);
+            this.statusStrip1.TabIndex = 11;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // statusLabel
+            // 
+            this.statusLabel.Name = "statusLabel";
+            this.statusLabel.Size = new System.Drawing.Size(23, 17);
+            this.statusLabel.Text = "OK";
+            // 
+            // btnExit
+            // 
+            this.btnExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnExit.Location = new System.Drawing.Point(736, 393);
+            this.btnExit.Name = "btnExit";
+            this.btnExit.Size = new System.Drawing.Size(75, 23);
+            this.btnExit.TabIndex = 10;
+            this.btnExit.Text = "Thoát";
+            this.btnExit.UseVisualStyleBackColor = true;
+            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
+            // 
+            // btnExportPj
+            // 
+            this.btnExportPj.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnExportPj.Location = new System.Drawing.Point(736, 368);
+            this.btnExportPj.Name = "btnExportPj";
+            this.btnExportPj.Size = new System.Drawing.Size(75, 23);
+            this.btnExportPj.TabIndex = 9;
+            this.btnExportPj.Text = "Xuất Project";
+            this.btnExportPj.UseVisualStyleBackColor = true;
+            this.btnExportPj.Click += new System.EventHandler(this.btnExportPj_Click);
+            // 
+            // resourcesToolStripMenuItem1
+            // 
+            this.resourcesToolStripMenuItem1.Name = "resourcesToolStripMenuItem1";
+            this.resourcesToolStripMenuItem1.Size = new System.Drawing.Size(127, 22);
+            this.resourcesToolStripMenuItem1.Text = "Resources";
+            this.resourcesToolStripMenuItem1.Click += new System.EventHandler(this.resourcesToolStripMenuItem1_Click);
+            // 
+            // backgroundWorker_ExportPj
+            // 
+            this.backgroundWorker_ExportPj.WorkerReportsProgress = true;
+            this.backgroundWorker_ExportPj.WorkerSupportsCancellation = true;
+            this.backgroundWorker_ExportPj.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_ExportPj_DoWork);
+            this.backgroundWorker_ExportPj.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ExportPj_ProgressChanged);
+            this.backgroundWorker_ExportPj.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_ExportPj_RunWorkerCompleted);
+            // 
+            // btnStop
+            // 
+            this.btnStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnStop.Location = new System.Drawing.Point(655, 368);
+            this.btnStop.Name = "btnStop";
+            this.btnStop.Size = new System.Drawing.Size(75, 23);
+            this.btnStop.TabIndex = 12;
+            this.btnStop.Text = "Dừng";
+            this.btnStop.UseVisualStyleBackColor = true;
+            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
             // frmMain
             // 
-            this.ClientSize = new System.Drawing.Size(823, 466);
+            this.ClientSize = new System.Drawing.Size(823, 443);
             this.Controls.Add(this.panelStep1);
             this.Name = "frmMain";
             this.Text = "E2P Add-in - Kết hợp công tác";
@@ -286,9 +414,13 @@ namespace Excel2ProjAddin.Forms
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.olvCombinedTasks)).EndInit();
             this.contextMenuRight.ResumeLayout(false);
             this.panelStep1.ResumeLayout(false);
+            this.panelStep1.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -307,11 +439,22 @@ namespace Excel2ProjAddin.Forms
         private System.Windows.Forms.Button btnRefresh;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Panel panelStep1;
-        private System.Windows.Forms.Button btnNextStep2;
+        private System.Windows.Forms.Button btnExportPj;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.ContextMenuStrip contextMenuRight;
         private System.Windows.Forms.ToolStripMenuItem cmChoosePredecessor;
         private ObjectListView olvTasks;
+        private System.Windows.Forms.Button btnGroup;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel statusLabel;
+        private System.Windows.Forms.Button btnExit;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Button btnUp;
+        private System.Windows.Forms.Button btnDown;
+        private System.Windows.Forms.ToolStripMenuItem resourcesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resourcesToolStripMenuItem1;
+        private System.ComponentModel.BackgroundWorker backgroundWorker_ExportPj;
+        private System.Windows.Forms.Button btnStop;
 
 
 

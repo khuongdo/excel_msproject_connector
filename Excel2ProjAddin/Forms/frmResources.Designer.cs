@@ -43,7 +43,7 @@
             this.olvResources.Location = new System.Drawing.Point(0, 25);
             this.olvResources.Name = "olvResources";
             this.olvResources.ShowGroups = false;
-            this.olvResources.Size = new System.Drawing.Size(595, 324);
+            this.olvResources.Size = new System.Drawing.Size(718, 380);
             this.olvResources.TabIndex = 0;
             this.olvResources.UseCompatibleStateImageBehavior = false;
             this.olvResources.UseFiltering = true;
@@ -55,7 +55,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(595, 350);
+            this.ClientSize = new System.Drawing.Size(718, 406);
             this.Controls.Add(this.olvResources);
             this.Name = "frmResources";
             this.Text = "frmResources";

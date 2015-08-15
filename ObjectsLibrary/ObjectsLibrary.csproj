@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConvertToMSProject\ExportToMSP.cs" />
     <Compile Include="Objects\MSPResource.cs" />
     <Compile Include="Objects\MSPTask.cs" />
     <Compile Include="Objects\MSPMethod.cs" />

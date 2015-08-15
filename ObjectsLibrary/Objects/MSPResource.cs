@@ -17,17 +17,17 @@ namespace ObjectsLibrary
     [Serializable()]
     public class MSPResource
     {
-        [OLVColumn("Mã",DisplayIndex = 0)]
+        [OLVColumn("Mã",DisplayIndex = 0,Width = 70)]
         public string Code {get;set;}
-        [OLVColumn("Tên",DisplayIndex = 1)]
+        [OLVColumn("Tên",DisplayIndex = 1, Width = 180)]
         public string Name { get; set; }
-        [OLVColumn("Loại",DisplayIndex = 2)]
+        [OLVColumn("Loại",DisplayIndex = 2, Width = 60)]
         public ResourceType Type { get; set; }
-        [OLVColumn("Hao phí",DisplayIndex = 4)]
+        [OLVColumn("Hao phí",DisplayIndex = 4, Width = 50)]
         public double Assess { get; set; } // Hao phi
-        [OLVColumn("ĐV",DisplayIndex = 3)]
+        [OLVColumn("ĐV",DisplayIndex = 3,Width = 20)]
         public string Unit { get; set; }
-        [OLVColumn("Khối lượng",DisplayIndex = 5)]
+        [OLVColumn("Khối lượng",DisplayIndex = 5,Width = 50)]
         public decimal Value { get; set; }
         
         public double TaskWaste;

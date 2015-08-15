@@ -19,5 +19,10 @@ namespace Excel2ProjAddin
             Forms.frmMain f = new Forms.frmMain(ExcelModule.CollectTasks());
             f.Show();
         }
+
+        private void button1_Click(object sender, RibbonControlEventArgs e)
+        {
+            //Module.ExportToMSProject.AddTasks();
+        }
     }
 }

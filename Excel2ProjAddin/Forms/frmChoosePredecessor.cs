@@ -18,16 +18,13 @@ namespace Excel2ProjAddin.Forms
         {
             InitializeComponent();
             PopulateOLV(Tasks);
-
             
         }
         private void PopulateOLV(List<MSPTask> Tasks)
         {
             OLVColumn colNo = new OLVColumn("STT", "No");
-            
             OLVColumn colID = new OLVColumn("ID", "ID");
             OLVColumn colName = new OLVColumn("Tên công tác", "Name");
-            
             OLVColumn colLinkType = new OLVColumn();
             colLinkType.Text = "Link Type";
             colLinkType.DataType = typeof(string);
@@ -41,6 +38,8 @@ namespace Excel2ProjAddin.Forms
         }
         private void btnOK_Click(object sender, EventArgs e)
         {
+
+
             this.Close();
         }
 
@@ -64,9 +63,9 @@ namespace Excel2ProjAddin.Forms
         {
             if (e.Column.Text != "Link Type")
                 return;
-
+            ObjectListView olv = (ObjectListView)sender;
             ComboBox cb = (ComboBox)e.Control;
-            e.NewValue = cb.Text as string;
+            
            
             // Here we simply make the list redraw the involved ListViewItem 
 
