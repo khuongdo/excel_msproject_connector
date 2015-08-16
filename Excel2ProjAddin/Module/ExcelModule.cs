@@ -34,7 +34,7 @@ namespace Excel2ProjAddin
                     TaskToAdd = new MSPTask() 
                     { 
                         ID = id++,
-                        TaskNo = Convert.ToInt32(TaskNo),
+                        TaskNo = id,
                         Code = Convert.ToString(((Excel.Range)xlWS.Cells[r, 2]).Value2),
                         Name = Convert.ToString(((Excel.Range)xlWS.Cells[r, 3]).Value2),
                         unit = new Unit(Convert.ToString(((Excel.Range)xlWS.Cells[r, 4]).Value2)),
@@ -47,7 +47,7 @@ namespace Excel2ProjAddin
                     MSPResource ResToAdd = new MSPResource()
                     {
                         Code = Convert.ToString(ResourceID),
-                        Name = Convert.ToString(((Excel.Range)xlWS.Cells[r, 3]).Value2),
+                        Name = Convert.ToString(((Excel.Range)xlWS.Cells[r, 3]).Value2).Replace(',','.').Replace('/','-'),
                         Unit = Convert.ToString(((Excel.Range)xlWS.Cells[r, 4]).Value2),
                         Assess = Convert.ToDouble(((Excel.Range)xlWS.Cells[r, 5]).Value2),
                         Value = Convert.ToDecimal(((Excel.Range)xlWS.Cells[r, 6]).Value2),

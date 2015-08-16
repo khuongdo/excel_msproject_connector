@@ -18,7 +18,7 @@ namespace Excel2ProjAddin.Forms
 {
     public partial class frmMain : Form
     {
-        public frmMain(List<MSPTask> ListTask)
+        public frmMain()
         {
             Properties.Settings.Default.CombinedTaskList = string.Empty;
             Properties.Settings.Default.TaskList = string.Empty;
@@ -28,20 +28,43 @@ namespace Excel2ProjAddin.Forms
             panelStep1.Visible = true;
             //panelStep2.Visible = false;
 
+            
             //
-            PopulateTaskList(ListTask);
+            PopulateTaskList();
             PopulateCombinedTasks();
 
-            
+            //Worker collect task
+            BackgroundWorker worker_collectTask = new BackgroundWorker();
+            worker_collectTask.WorkerReportsProgress = true;
+            worker_collectTask.DoWork += worker_collectTask_DoWork;
+            worker_collectTask.RunWorkerCompleted += worker_collectTask_RunWorkerCompleted;
+            worker_collectTask.ProgressChanged += worker_collectTask_ProgressChanged;
+            worker_collectTask.RunWorkerAsync();
         }
-        private void PopulateTaskList(List<MSPTask> ListTask)
+
+        void worker_collectTask_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            statusLabel.Text = (string)e.UserState;
+        }
+
+        void worker_collectTask_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            List<MSPTask> Tasks = (List<MSPTask>)e.Result;
+            olvTasks.SetObjects(Tasks);
+        }
+
+        void worker_collectTask_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker worker = (BackgroundWorker)sender;
+            worker.ReportProgress(1, "Đang tạo danh sách công tác....");
+            e.Result = ExcelModule.CollectTasks();
+            worker.ReportProgress(1, "Tải danh sách công tác hoàn tất");
+        }
+        private void PopulateTaskList()
         {
             Generator.GenerateColumns(olvTasks, typeof(MSPTask), false);
-            olvTasks.SetObjects(ListTask);
             olvTasks.Columns.RemoveAt(6);
             olvTasks.AllColumns[0].HeaderCheckBox = true;
-            SaveTasks(ListTask);
-
         }
         private void PopulateCombinedTasks()
         {
@@ -170,7 +193,7 @@ namespace Excel2ProjAddin.Forms
             {
                 List<MSPTask> list = LoadTasks();
                 olvTasks.Clear();
-                PopulateTaskList(list);
+                //PopulateTaskList(list);
             }
         }
 
@@ -225,20 +248,19 @@ namespace Excel2ProjAddin.Forms
             MSPTask CurrTask = (MSPTask)e.RowObject;
             if (e.Column == olv.GetColumn("Nhân công"))
             {
-                
                 CurrTask.Worker = (int)e.NewValue;
+                CurrTask.Resources.Single(x => x.Type == ResourceType.Work).Value = CurrTask.Worker;
                 CalculateDuration(ref CurrTask);
-                
             }
             if (e.Column == olv.GetColumn("Predecessors"))
             {
                 CurrTask.Predeccessors = (string)e.NewValue;
-                
             }
             olv.UpdateObject(CurrTask);
         }
         private void CalculateDuration(ref MSPTask Task)
         {
+         
             if (Task.Worker == 0)
                 return;
             double WorkerQuota = Task.Resources.Single(x => x.Type == ResourceType.Work).Assess;
@@ -277,7 +299,7 @@ namespace Excel2ProjAddin.Forms
             if (olvCombinedTasks.SelectedIndex == -1)
                 return;
             MSPTask selectedtask = (MSPTask)olvCombinedTasks.SelectedObject;
-            Forms.frmResources f = new frmResources(selectedtask.Resources);
+            Forms.frmResources f = new frmResources(selectedtask);
             f.Show();
         }
 
@@ -286,7 +308,7 @@ namespace Excel2ProjAddin.Forms
             if (olvTasks.SelectedIndex == -1)
                 return;
             MSPTask task = (MSPTask)olvTasks.SelectedObject;
-            Forms.frmResources f = new frmResources(task.Resources);
+            Forms.frmResources f = new frmResources(task);
             f.Show();
         }
 
@@ -308,14 +330,30 @@ namespace Excel2ProjAddin.Forms
             List<MSPTask> Tasks = (List<MSPTask>)e.Argument;
             Tasks.Sort();
             BackgroundWorker bgwsender = (BackgroundWorker)sender;
+
+            // Add resource to project
+            bgwsender.ReportProgress(0, "Xử lý resources....Đang chạy");
+            List<MSPResource> ResourceList = MSP_Methods.CollectResources(Tasks);
+            bgwsender.ReportProgress(0, "Xử lý resources....Hoàn tất");
             MSproject.Application PjApp = new MSproject.Application();
             MSproject.Project PjProject = PjApp.Projects.Add();
+            bgwsender.ReportProgress(0, "Đang nạp resource....");
+            foreach (var r in ResourceList)
+            {
+               MSproject.Resource CurrRes = PjProject.Resources.Add(r.Name);
+               CurrRes.Type = r.Type == ResourceType.Material ? 
+                   MSproject.PjResourceTypes.pjResourceTypeMaterial : MSproject.PjResourceTypes.pjResourceTypeWork;
+               CurrRes.Initials = r.Code;
+            }
+            bgwsender.ReportProgress(0, "Đang nạp resource....Hoàn tất");
+
+            // Add task
             foreach (MSPTask task in Tasks)
             {
                 if (!bgwsender.CancellationPending)
                 {
-                    bgwsender.ReportProgress(1, "Đang xuất công tác: " + task.TaskNo);
-                    ExportToMSP.ExportByTask(PjProject, task);
+                    bgwsender.ReportProgress(1, string.Format("Đang xuất công tác: {0}/{1}",task.TaskNo, Tasks.Count));
+                    ExportToMSP.ExportByTask(PjProject, Tasks, task);
                 }
                 else
                 {
@@ -330,6 +368,7 @@ namespace Excel2ProjAddin.Forms
         }
         private void backgroundWorker_ExportPj_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
+            //int Percentage = (int)e.ProgressPercentage;
             statusLabel.Text = (string)e.UserState;
         }
 

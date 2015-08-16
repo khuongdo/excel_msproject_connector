@@ -8,40 +8,30 @@ namespace ObjectsLibrary
 
     public class MSP_Methods
     {
+        public static List<MSPResource> CollectResources(List<MSPTask> Tasks)
+        {
+            List<MSPResource> tempResources = new List<MSPResource>();
+            List<string> tempList = new List<string>();
+            foreach (MSPTask task in Tasks)
+            {
+                tempList.AddRange(task.Resources.Select(x => x.Name));
+                tempResources.AddRange(task.Resources);
+            }
+            List<MSPResource> finalRes =  new List<MSPResource>();
+            tempList = tempList.Distinct().ToList();
+            foreach (string item in tempList)
+            {
+                finalRes.Add(tempResources.First(x => x.Name == item));
+            }
+            return finalRes;
+            
+        }
         public static MSPTask CombineTasks(string NewName, List<MSPTask> Tasks)
         {
             return CombineTasks_Compute(NewName, Tasks.ToArray());
         }
         public static MSPTask CombineTasks(string NewName, params MSPTask[] Tasks)
         {
-            //// Check whether user inputs one task
-            //if (Tasks.Count<MSPTask>() == 0)
-            //    return null;
-            //MSPTask NewTask = new MSPTask();
-            ////Task Name
-            //NewTask.Name = NewName;
-            ////Combine task value multiply with unit factor
-            //Array.ForEach(Tasks, x => NewTask.Value += x.Value * x.unit.Factor);
-            ////Combine Task ID
-            //NewTask.Code = Tasks.Select(i => i.Code).Aggregate((i, j) => i + "+" + j);
-            ////Task No
-            //NewTask.TaskNo = 1;
-            ////duration
-            //Array.ForEach(Tasks, x => NewTask.DurationInDay += x.DurationInDay);
-            ////Predeccessors
-            //NewTask.Predeccessors = string.Empty;
-            ////Combine Unit
-            //List<Unit> UnitFactorList = new List<Unit>();
-            //Array.ForEach(Tasks, x => UnitFactorList.Add(x.unit));
-            //NewTask.unit = UnitFactorList.Min();
-            ////Combine Resources
-            //List<MSPResource> newResources = new List<MSPResource>();
-            //foreach (MSPTask T in Tasks)
-            //{
-            //    T.Resources.ForEach(x => newResources.Add(x));
-            //}
-            //MergeResources(newResources).ForEach(x => NewTask.AddResource(x));
-            //return NewTask;
             return CombineTasks_Compute(NewName, Tasks);
         }
         private static MSPTask CombineTasks_Compute(string NewName, MSPTask[] Tasks)
@@ -149,7 +139,7 @@ namespace ObjectsLibrary
                 tempResource.Unit = WorkResources[0].Unit;
                 strnameList.ForEach(x => dblnameList.Add(Convert.ToDouble(x)));
                 double maxValue = dblnameList.Max();
-                tempResource.Name = Regex.Replace(WorkResources[0].Name, "[0-9]*,[0-9]*", string.Format("{0:0.0}",maxValue).Replace('.',','));
+                tempResource.Name = Regex.Replace(WorkResources[0].Name, "[0-9]*,[0-9]*", string.Format("{0:0.0}",maxValue).Replace('/','-'));
                 
                 MSPResource maxRes = (from MSPResource r in WorkResources
                                    where r.Name == tempResource.Name
@@ -163,5 +153,6 @@ namespace ObjectsLibrary
 
         }
       
+        
     }
 }

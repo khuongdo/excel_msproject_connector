@@ -33,13 +33,13 @@ namespace ObjectsLibrary
             
             foreach (MSPTask task in Tasks)
             {
-                ExportByTask(PjProject,task);
+                ExportByTask(PjProject,Tasks,task);
             }
 
             
 
         }
-        public static void ExportByTask(MSProject.Project CurrPj,MSPTask task)
+        public static void ExportByTask(MSProject.Project CurrPj, List<MSPTask> Tasks, MSPTask task)
         {
             MSProject.Task CurrTask = CurrPj.Tasks.Add(task.Name, Type.Missing);
             CurrTask.Duration = task.DurationInDay;
@@ -49,18 +49,16 @@ namespace ObjectsLibrary
                 List<string> _predecessorsNo = new List<string>();
                 foreach (string id in _predecessorsID)
                 {
-                    //_predecessorsNo.Add(Tasks.Single(x => x.ID == Convert.ToInt32(id)).TaskNo.ToString());
+                    _predecessorsNo.Add(Tasks.Single(x => x.ID == Convert.ToInt32(id)).TaskNo.ToString());
                 }
                 CurrTask.Predecessors = _predecessorsNo.Aggregate((i, j) => i + "," + j);
             }
             CurrTask.Notes = task.Code;
-
-            //foreach (MSPResource r in task.Resources)
-            //{
-            //    MSProject.Resource CurrRes = CurrTask.Resources.Add(r.Name, Type.Missing);
-            //    CurrRes.Code = r.Code;
-
-            //}
+            List<MSProject.Resource> CurrResourcesCollection = CurrPj.Resources.Cast<MSProject.Resource>().ToList();
+            foreach (MSPResource r in task.Resources)
+            {
+                CurrTask.Assignments.Add(CurrTask.ID, CurrResourcesCollection.Single(x => x.Name == r.Name).ID, Type.Missing);
+            }
         }
     }
 }

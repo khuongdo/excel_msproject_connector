@@ -25,7 +25,7 @@ namespace ObjectsLibrary
         public ResourceType Type { get; set; }
         [OLVColumn("Hao phí",DisplayIndex = 4, Width = 50)]
         public double Assess { get; set; } // Hao phi
-        [OLVColumn("ĐV",DisplayIndex = 3,Width = 20)]
+        [OLVColumn("ĐV",DisplayIndex = 3,Width = 50)]
         public string Unit { get; set; }
         [OLVColumn("Khối lượng",DisplayIndex = 5,Width = 50)]
         public decimal Value { get; set; }
