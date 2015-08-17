@@ -48,7 +48,6 @@ namespace Excel2ProjAddin.Forms
             this.btnDown = new System.Windows.Forms.Button();
             this.btnUp = new System.Windows.Forms.Button();
             this.btnGroup = new System.Windows.Forms.Button();
-            this.btnSave = new System.Windows.Forms.Button();
             this.olvCombinedTasks = new BrightIdeasSoftware.ObjectListView();
             this.contextMenuRight = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmChoosePredecessor = new System.Windows.Forms.ToolStripMenuItem();
@@ -126,7 +125,6 @@ namespace Excel2ProjAddin.Forms
             // 
             this.splitContainer1.Panel2.Controls.Add(this.panel2);
             this.splitContainer1.Panel2.Controls.Add(this.btnGroup);
-            this.splitContainer1.Panel2.Controls.Add(this.btnSave);
             this.splitContainer1.Panel2.Controls.Add(this.olvCombinedTasks);
             this.splitContainer1.Panel2.Controls.Add(this.label2);
             this.splitContainer1.Size = new System.Drawing.Size(822, 362);
@@ -216,6 +214,7 @@ namespace Excel2ProjAddin.Forms
             | System.Windows.Forms.AnchorStyles.Left)));
             this.panel2.Controls.Add(this.btnDown);
             this.panel2.Controls.Add(this.btnUp);
+            this.panel2.Enabled = false;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
             this.panel2.Name = "panel2";
@@ -257,18 +256,6 @@ namespace Excel2ProjAddin.Forms
             this.btnGroup.UseVisualStyleBackColor = true;
             this.btnGroup.Click += new System.EventHandler(this.btnGroup_Click);
             // 
-            // btnSave
-            // 
-            this.btnSave.BackgroundImage = global::Excel2ProjAddin.Properties.Resources._1438627383_vector_66_12;
-            this.btnSave.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnSave.Enabled = false;
-            this.btnSave.Location = new System.Drawing.Point(235, 7);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(29, 29);
-            this.btnSave.TabIndex = 8;
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
             // olvCombinedTasks
             // 
             this.olvCombinedTasks.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -302,6 +289,7 @@ namespace Excel2ProjAddin.Forms
             // 
             // cmChoosePredecessor
             // 
+            this.cmChoosePredecessor.Enabled = false;
             this.cmChoosePredecessor.Name = "cmChoosePredecessor";
             this.cmChoosePredecessor.Size = new System.Drawing.Size(169, 22);
             this.cmChoosePredecessor.Text = "Chọn Predecessor";
@@ -439,7 +427,6 @@ namespace Excel2ProjAddin.Forms
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Panel panelStep1;
         private System.Windows.Forms.Button btnExportPj;
-        private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.ContextMenuStrip contextMenuRight;
         private System.Windows.Forms.ToolStripMenuItem cmChoosePredecessor;
         private ObjectListView olvTasks;

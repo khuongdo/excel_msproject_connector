@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 namespace ObjectsLibrary
 {
 
-    public class MSP_Methods
+    public class MSPMethods
     {
         public static List<MSPResource> CollectResources(List<MSPTask> Tasks)
         {
@@ -131,7 +131,7 @@ namespace ObjectsLibrary
                     tempResource.Value += r.Value; //-> OK
                     sumTaskWaste += r.TaskWaste;
                     sumTaskWaste_x_Assess += (r.TaskWaste * r.Assess);
-                    Regex regex = new Regex("[0-9]*,[0-9]*");
+                    Regex regex = new Regex("[0-9].[0-9]");
                     Match m = regex.Match(r.Name);
                     strnameList.Add(m.Value.Replace(',','.'));
                 }
@@ -139,7 +139,7 @@ namespace ObjectsLibrary
                 tempResource.Unit = WorkResources[0].Unit;
                 strnameList.ForEach(x => dblnameList.Add(Convert.ToDouble(x)));
                 double maxValue = dblnameList.Max();
-                tempResource.Name = Regex.Replace(WorkResources[0].Name, "[0-9]*,[0-9]*", string.Format("{0:0.0}",maxValue).Replace('/','-'));
+                tempResource.Name = Regex.Replace(WorkResources[0].Name, "[0-9].[0-9]", string.Format("{0:0.0}",maxValue).Replace('/','-'));
                 
                 MSPResource maxRes = (from MSPResource r in WorkResources
                                    where r.Name == tempResource.Name

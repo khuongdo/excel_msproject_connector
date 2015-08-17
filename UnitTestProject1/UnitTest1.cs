@@ -95,8 +95,8 @@ namespace UnitTestProject1
                 new MSPResource("NC.0012", "Nhân công bậc 4,0/7 - Nhóm I", 11m, "Công", 1.322,200000, ResourceType.Work),
                 new MSPResource("MX","Máy xúc", 10m, "ca", 0.56,45000, ResourceType.Material),
                 new MSPResource("MA.0089", "Máy đào 1,25m3", 4m, "ca", 0.5,20000, ResourceType.Material));
-            MSPTask actual_value1 = MSP_Methods.CombineTasks("MergedTask", Task1, Task2,Task3);
-            MSPTask actual_value2 = MSP_Methods.CombineTasks("MergedTask",new List<MSPTask>(){Task1,Task2,Task3});
+            MSPTask actual_value1 = MSPMethods.CombineTasks("MergedTask", Task1, Task2,Task3);
+            MSPTask actual_value2 = MSPMethods.CombineTasks("MergedTask",new List<MSPTask>(){Task1,Task2,Task3});
             MSPTask expected_value = new MSPTask()
             {
                 DurationInDay = 55,

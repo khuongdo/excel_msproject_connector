@@ -42,7 +42,7 @@ namespace ObjectsLibrary
         public static void ExportByTask(MSProject.Project CurrPj, List<MSPTask> Tasks, MSPTask task)
         {
             MSProject.Task CurrTask = CurrPj.Tasks.Add(task.Name, Type.Missing);
-            CurrTask.Duration = task.DurationInDay;
+            CurrTask.Duration = task.DurationInDay * 480;
             if (task.Predeccessors != string.Empty && task.Predeccessors != null)
             {
                 string[] _predecessorsID = task.Predeccessors.Split(',');

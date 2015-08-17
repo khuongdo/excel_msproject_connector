@@ -13,6 +13,7 @@ using System.Reflection;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using MSproject = Microsoft.Office.Interop.MSProject;
+using Microsoft.VisualBasic;
 
 namespace Excel2ProjAddin.Forms
 {
@@ -50,6 +51,7 @@ namespace Excel2ProjAddin.Forms
         void worker_collectTask_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             List<MSPTask> Tasks = (List<MSPTask>)e.Result;
+            olvTasks.Enabled = true;
             olvTasks.SetObjects(Tasks);
         }
 
@@ -65,6 +67,7 @@ namespace Excel2ProjAddin.Forms
             Generator.GenerateColumns(olvTasks, typeof(MSPTask), false);
             olvTasks.Columns.RemoveAt(6);
             olvTasks.AllColumns[0].HeaderCheckBox = true;
+            olvTasks.Enabled = false;
         }
         private void PopulateCombinedTasks()
         {
@@ -161,30 +164,23 @@ namespace Excel2ProjAddin.Forms
                 MessageBox.Show("Không thể kết hợp công tác khác đơn vị");
                 return;
             }
-                
-            List<MSPTask> CurrTasksList = LoadTasks();
-            string NewName = ((MSPTask)olvTasks.CheckedObjects[0]).Name;
-            if (InputBox.Show("Kết hợp công tác", "Nhập tên công tác mới", ref NewName)
-                == System.Windows.Forms.DialogResult.OK)
+            string NewName = Interaction.InputBox("Nhập tên công tác mới", "Kết hợp công tác", 
+                ((MSPTask)olvTasks.CheckedObjects[0]).Name);
+            if (NewName == string.Empty)
+                return;
+            List<MSPTask> TasksToCombine = new List<MSPTask>();
+            foreach (MSPTask item in olvTasks.CheckedObjects)
             {
-                List<MSPTask> TasksToCombine = new List<MSPTask>();
-                foreach (MSPTask item in olvTasks.CheckedObjects)
-                {
-                    //Delete Task in List Task
-                    olvTasks.RemoveObject(item);
-                    TasksToCombine.Add(item);
-                }
-                MSPTask CombinedTask = MSP_Methods.CombineTasks(NewName, TasksToCombine);// Tasks to be combined
-                //Save Combined Task to Disk
-                List<MSPTask> CombinedTasks = LoadCombinedTasks() ?? new List<MSPTask>();
-                CombinedTask.ID = CombinedTasks.Count;
-                CombinedTask.TaskNo = CombinedTasks.Count + 1;
-                CombinedTasks.Add(CombinedTask);
-                SaveCombined(CombinedTasks);
-
-                //Add new Item and Resize olvcombined Columns
-                olvCombinedTasks.AddObject(CombinedTask);
+                //Delete Task in List Task
+                olvTasks.RemoveObject(item);
+                TasksToCombine.Add(item);
             }
+            MSPTask NewTask = MSPMethods.CombineTasks(NewName,TasksToCombine);
+            NewTask.ID = olvCombinedTasks.Items.Count;
+            NewTask.TaskNo = olvCombinedTasks.Items.Count + 1;
+            olvCombinedTasks.AddObject(NewTask);
+            //olvCombinedTasks.UpdateObject(NewTask);
+            
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -200,15 +196,7 @@ namespace Excel2ProjAddin.Forms
        
 
         
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            //if (olvCombinedTasks.Items.Count == 0)
-            //    return;
-            //List<MSPTask> CombinedTasks = new List<MSPTask>();
-            //foreach (object obj in olvCombinedTasks.Objects)
-            //    CombinedTasks.Add(obj as MSPTask);
-            //SaveCombined(CombinedTasks);
-        }
+       
 
         private void cmAdd_Click(object sender, EventArgs e)
         {
@@ -219,8 +207,10 @@ namespace Excel2ProjAddin.Forms
             {
                 //Delete Task in List Task
                 olvTasks.RemoveObject(item);
-               
-                olvCombinedTasks.AddObject(item);
+                MSPTask newTask = (MSPTask)item;
+                newTask.ID = olvCombinedTasks.Items.Count;
+                newTask.TaskNo = newTask.ID + 1;
+                olvCombinedTasks.AddObject(newTask);
             }
             
          
@@ -284,7 +274,6 @@ namespace Excel2ProjAddin.Forms
         {
             if (olvCombinedTasks.SelectedIndex == -1)
                 return;
-            
         }
 
         private void btnDown_Click(object sender, EventArgs e)
@@ -333,7 +322,7 @@ namespace Excel2ProjAddin.Forms
 
             // Add resource to project
             bgwsender.ReportProgress(0, "Xử lý resources....Đang chạy");
-            List<MSPResource> ResourceList = MSP_Methods.CollectResources(Tasks);
+            List<MSPResource> ResourceList = MSPMethods.CollectResources(Tasks);
             bgwsender.ReportProgress(0, "Xử lý resources....Hoàn tất");
             MSproject.Application PjApp = new MSproject.Application();
             MSproject.Project PjProject = PjApp.Projects.Add();
@@ -368,7 +357,6 @@ namespace Excel2ProjAddin.Forms
         }
         private void backgroundWorker_ExportPj_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            //int Percentage = (int)e.ProgressPercentage;
             statusLabel.Text = (string)e.UserState;
         }
 
