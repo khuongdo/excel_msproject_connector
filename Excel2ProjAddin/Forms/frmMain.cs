@@ -53,6 +53,7 @@ namespace Excel2ProjAddin.Forms
             List<MSPTask> Tasks = (List<MSPTask>)e.Result;
             olvTasks.Enabled = true;
             olvTasks.SetObjects(Tasks);
+            SaveTasks(olvTasks.Objects.Cast<MSPTask>().ToList());
         }
 
         void worker_collectTask_DoWork(object sender, DoWorkEventArgs e)
@@ -127,25 +128,25 @@ namespace Excel2ProjAddin.Forms
             
         }
 
-        private void tbSearch_TextChanged(object sender, EventArgs e)
-        {
-            if (tbSearch.Text != string.Empty)
-            {
-                olvTasks.OwnerDraw = true;
-                TextMatchFilter filter = TextMatchFilter.Contains(olvTasks, tbSearch.Text);
-                olvTasks.ModelFilter = filter;
-                HighlightTextRenderer hl = new HighlightTextRenderer(filter);
-                hl.FillBrush = new SolidBrush(Color.Yellow);
-                hl.CornerRoundness = 1.5f;
-                hl.FramePen = new Pen(Color.Red);
-                olvTasks.DefaultRenderer = hl;
-            }
-            //else
-            //{
-            //    //olvTasks.Refresh();
-            //    olvTasks.OwnerDraw = false;
-            //}
-        }
+        //private void tbSearch_TextChanged(object sender, EventArgs e)
+        //{
+        //    if (tbSearch.Text != string.Empty)
+        //    {
+        //        olvTasks.OwnerDraw = true;
+        //        TextMatchFilter filter = TextMatchFilter.Contains(olvTasks, tbSearch.Text);
+        //        olvTasks.ModelFilter = filter;
+        //        HighlightTextRenderer hl = new HighlightTextRenderer(filter);
+        //        hl.FillBrush = new SolidBrush(Color.Yellow);
+        //        hl.CornerRoundness = 1.5f;
+        //        hl.FramePen = new Pen(Color.Red);
+        //        olvTasks.DefaultRenderer = hl;
+        //    }
+        //    //else
+        //    //{
+        //    //    //olvTasks.Refresh();
+        //    //    olvTasks.OwnerDraw = false;
+        //    //}
+        //}
         // Context Menu
         private void btnCombine_Click(object sender, EventArgs e)
         {
@@ -187,9 +188,9 @@ namespace Excel2ProjAddin.Forms
             if (MessageBox.Show("Bạn có muốn tải lại danh sách công tác?", "Thông báo",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
             {
-                List<MSPTask> list = LoadTasks();
-                olvTasks.Clear();
-                //PopulateTaskList(list);
+                olvCombinedTasks.Items.Clear();
+                olvTasks.Items.Clear();
+                olvTasks.SetObjects(LoadTasks());
             }
         }
 
@@ -219,18 +220,37 @@ namespace Excel2ProjAddin.Forms
         private void cmChoosePredecessor_Click(object sender, EventArgs e)
         {
             //Subtract selected object
-            
             if (olvCombinedTasks.SelectedIndex == -1)
             {
                 return;
             }
-            MSPTask TaskObjToRemove;
-            TaskObjToRemove = olvCombinedTasks.SelectedObject as MSPTask;
-            List<MSPTask> TasksToPopulate = LoadCombinedTasks();
+            MSPTask TaskObjToRemove = olvCombinedTasks.SelectedObject as MSPTask;
+            List<MSPTask> TasksToPopulate = olvCombinedTasks.Objects.Cast<MSPTask>().ToList(); 
             TasksToPopulate.Remove(TaskObjToRemove);
-            Forms.frmChoosePredecessor f = new frmChoosePredecessor(TasksToPopulate);
-            f.Show();
+            Forms.frmChoosePredecessor frmChoosePre = new frmChoosePredecessor(TasksToPopulate,TaskObjToRemove.Predecessors);
+            
+            frmChoosePre.FormClosed += frmChoosePre_FormClosed;
+            frmChoosePre.ShowDialog();
+            
         }
+
+        void frmChoosePre_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Form frmChoosePre = (Form)sender;
+            ObjectListView olvChoosePre = frmChoosePre.Controls.OfType<ObjectListView>().ToList()[0];
+            List<MSPTask> PreTasks = olvChoosePre.CheckedObjects.Cast<MSPTask>().ToList();
+            if (PreTasks == null || PreTasks.Count == 0)
+            {
+                return;
+            }
+            this.Focus();
+            ((MSPTask)olvCombinedTasks.SelectedObject).Predecessors = PreTasks;
+            olvCombinedTasks.RefreshObject(olvCombinedTasks.SelectedObject);
+        }
+
+      
+
+       
 
         private void olvCombinedTasks_CellEditFinishing(object sender, CellEditEventArgs e)
         {
@@ -242,10 +262,7 @@ namespace Excel2ProjAddin.Forms
                 CurrTask.Resources.Single(x => x.Type == ResourceType.Work).Value = CurrTask.Worker;
                 CalculateDuration(ref CurrTask);
             }
-            if (e.Column == olv.GetColumn("Predecessors"))
-            {
-                CurrTask.Predeccessors = (string)e.NewValue;
-            }
+            
             olv.UpdateObject(CurrTask);
         }
         private void CalculateDuration(ref MSPTask Task)
@@ -261,7 +278,6 @@ namespace Excel2ProjAddin.Forms
         private void btnGroup_Click(object sender, EventArgs e)
         {
             olvCombinedTasks.ShowGroups = olvCombinedTasks.ShowGroups == true ? false : true;
-            
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -272,14 +288,38 @@ namespace Excel2ProjAddin.Forms
         #region Navigator buttons
         private void btnUp_Click(object sender, EventArgs e)
         {
-            if (olvCombinedTasks.SelectedIndex == -1)
+            if (olvCombinedTasks.SelectedIndex <= 0)
                 return;
+            var selected_obj = olvCombinedTasks.SelectedObject;
+            var prev_obj = olvCombinedTasks.GetModelObject(olvCombinedTasks.SelectedIndex - 1);
+            
+            int temp_TaskNo = ((MSPTask)selected_obj).TaskNo;
+            ((MSPTask)selected_obj).TaskNo = ((MSPTask)prev_obj).TaskNo;
+            ((MSPTask)prev_obj).TaskNo = temp_TaskNo;
+
+            olvCombinedTasks.MoveObjects(olvCombinedTasks.SelectedIndex - 1, new object[]{selected_obj});
+            olvCombinedTasks.Focus();
+            olvCombinedTasks.EnsureModelVisible(selected_obj);
+            olvCombinedTasks.Refresh();
+            olvCombinedTasks.SelectObject(selected_obj);
         }
 
         private void btnDown_Click(object sender, EventArgs e)
         {
-            if (olvCombinedTasks.SelectedIndex == -1)
+            if (olvCombinedTasks.SelectedIndex == -1 || olvCombinedTasks.SelectedIndex == olvCombinedTasks.Items.Count - 1)
                 return;
+            var selected_obj = olvCombinedTasks.SelectedObject;
+            var next_obj = olvCombinedTasks.GetModelObject(olvCombinedTasks.SelectedIndex + 1);
+
+            int temp_TaskNo = ((MSPTask)selected_obj).TaskNo;
+            ((MSPTask)selected_obj).TaskNo = ((MSPTask)next_obj).TaskNo;
+            ((MSPTask)next_obj).TaskNo = temp_TaskNo;
+
+            olvCombinedTasks.MoveObjects(olvCombinedTasks.SelectedIndex, new object[] { next_obj });
+            olvCombinedTasks.Focus();
+            olvCombinedTasks.EnsureModelVisible(next_obj);
+            olvCombinedTasks.RefreshObjects(new object[] {next_obj,selected_obj});
+            olvCombinedTasks.SelectObject(selected_obj);
         }
         #endregion
 
@@ -306,7 +346,7 @@ namespace Excel2ProjAddin.Forms
         #region
         private void btnExportPj_Click(object sender, EventArgs e)
         {
-            //btnExportPj.Enabled = false;
+            btnExportPj.Enabled = false;
             List<MSPTask> Tasks = olvCombinedTasks.Objects.Cast<MSPTask>().ToList();
             backgroundWorker_ExportPj.RunWorkerAsync(Tasks);
         }
@@ -342,7 +382,7 @@ namespace Excel2ProjAddin.Forms
                 if (!bgwsender.CancellationPending)
                 {
                     bgwsender.ReportProgress(1, string.Format("Đang xuất công tác: {0}/{1}",task.TaskNo, Tasks.Count));
-                    ExportToMSP.ExportByTask(PjProject, Tasks, task);
+                    ExportToMSP.ExportByTask(PjProject, task);
                 }
                 else
                 {
@@ -362,7 +402,7 @@ namespace Excel2ProjAddin.Forms
 
         private void backgroundWorker_ExportPj_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            //btnExportPj.Enabled = true;
+            btnExportPj.Enabled = true;
         }
         #endregion
 

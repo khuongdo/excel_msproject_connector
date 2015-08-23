@@ -51,7 +51,7 @@ namespace ObjectsLibrary
             //duration
             Array.ForEach(Tasks, x => NewTask.DurationInDay += x.DurationInDay);
             //Predeccessors
-            //NewTask.Predeccessors = string.Empty;
+            
             //Combine Unit
             List<Unit> UnitFactorList = new List<Unit>();
             Array.ForEach(Tasks, x => UnitFactorList.Add(x.unit));

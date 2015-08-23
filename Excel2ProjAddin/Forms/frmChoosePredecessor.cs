@@ -14,35 +14,27 @@ namespace Excel2ProjAddin.Forms
 {
     public partial class frmChoosePredecessor : Form
     {
-        public frmChoosePredecessor(List<MSPTask> Tasks)
+        public frmChoosePredecessor(List<MSPTask> Tasks,List<MSPTask> PreTasks)
         {
             InitializeComponent();
-            PopulateOLV(Tasks);
+            PopulateOLV(Tasks,PreTasks);
             
         }
-        private void PopulateOLV(List<MSPTask> Tasks)
+        private void PopulateOLV(List<MSPTask> Tasks,List<MSPTask> PreTask)
         {
-            OLVColumn colNo = new OLVColumn("STT", "No");
-            OLVColumn colID = new OLVColumn("ID", "ID");
-            OLVColumn colName = new OLVColumn("Tên công tác", "Name");
-            OLVColumn colLinkType = new OLVColumn();
-            colLinkType.Text = "Link Type";
-            colLinkType.DataType = typeof(string);
-            colLinkType.IsEditable = true;
-            OLVColumn colTag = new OLVColumn("Tag", "Tag");
-            
-            olvChoosePredecessor.AllColumns.AddRange(new OLVColumn[] { colNo, colID, colName, colLinkType, colTag });
-            olvChoosePredecessor.RebuildColumns();
+            Generator.GenerateColumns(olvChoosePredecessor, typeof(MSPTask), false);
             olvChoosePredecessor.SetObjects(Tasks);
-            olvChoosePredecessor.AutoResizeColumns();
+            olvChoosePredecessor.AllColumns[0].HeaderCheckBox = true;
+            olvChoosePredecessor.CheckObjects(PreTask);
+            
         }
         private void btnOK_Click(object sender, EventArgs e)
         {
-
-
             this.Close();
+            
         }
 
+       
         private void olvChoosePredecessor_CellEditStarting(object sender, CellEditEventArgs e)
         {
             //Ignore edit event for other columns

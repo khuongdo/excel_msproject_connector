@@ -69,11 +69,11 @@ namespace ObjectsLibrary
     [Serializable()]
     public class MSPTask: IComparable<MSPTask>
     {
-
+        private List<MSPTask> _predecessors;
         
         [OLVColumn(IsVisible = false)]
         public int GroupID { get; set; }
-        [OLVColumn("ID",DisplayIndex = 0,Width = 30,IsEditable = false)]
+        [OLVColumn("ID",IsVisible = false,Width = 30,IsEditable = false)]
         public int ID {get;set;}
         [OLVColumn("STT", DisplayIndex = 1, Width = 50, TextAlign = HorizontalAlignment.Left, IsEditable = true)]
         public int TaskNo { get; set; }
@@ -88,8 +88,32 @@ namespace ObjectsLibrary
         public string UnitDescription { get; set; }
         [OLVColumn("Khối lượng",DisplayIndex = 5,Width=50,TextAlign=HorizontalAlignment.Left,IsEditable = false)]
         public double Value { get; set; }
-        [OLVColumn("Predecessors", DisplayIndex = 6, Width = 100)]
-        public string Predeccessors { get; set; }
+        [OLVColumn("Predecessors", DisplayIndex=6, Width = 100)]
+        public string PredeccessorsToString
+        {
+            get
+            {
+                if (this._predecessors.Count < 1)
+                    return string.Empty;
+                List<string> pre_taskNo = new List<string>();
+                this._predecessors.ForEach(x => pre_taskNo.Add(x.TaskNo.ToString()));
+                return pre_taskNo.Aggregate((i, j) => i + "," + j);
+            }
+        }
+        
+        public List<MSPTask> Predecessors
+        {
+            get
+            {
+                return this._predecessors;
+            }
+            set
+            {
+                if (value != _predecessors || value != null)
+                    this._predecessors = value;
+            }
+            
+        }
 
         [OLVColumn("Nhân công",DisplayIndex = 7,Width = 30,IsEditable = true)]
         public int Worker { get; set; }
@@ -124,6 +148,7 @@ namespace ObjectsLibrary
         public MSPTask()
         {
             Resources = new List<MSPResource>();
+            this._predecessors = new List<MSPTask>();
         }
         public void AddResource(params MSPResource[] resources)
         {
@@ -150,7 +175,7 @@ namespace ObjectsLibrary
                 && this.Code == OtherTask.Code
                // && this.TaskNo == OtherTask.TaskNo
                 && this.DurationInDay == OtherTask.DurationInDay
-                && this.Predeccessors == OtherTask.Predeccessors
+                && this.PredeccessorsToString == OtherTask.PredeccessorsToString
                 && this.Mode == OtherTask.Mode
                 && this.Value == OtherTask.Value
                 && this.Resources == OtherTask.Resources;
@@ -169,7 +194,7 @@ namespace ObjectsLibrary
                 && this.Code == taskobj.Code
                 //&& this.TaskNo == taskobj.TaskNo
                 && this.DurationInDay == taskobj.DurationInDay
-                && this.Predeccessors == taskobj.Predeccessors
+                && this.PredeccessorsToString == taskobj.PredeccessorsToString
                 && this.Mode == taskobj.Mode
                 && this.Value == taskobj.Value
                 && this.Resources.All(taskobj.Resources.Contains);
@@ -184,7 +209,7 @@ namespace ObjectsLibrary
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.ID) ? this.ID.GetHashCode() : 0);
                 //hash = (hash * 23) + (!Object.ReferenceEquals(null, this.TaskNo) ? this.TaskNo.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.DurationInDay) ? this.DurationInDay.GetHashCode() : 0);
-                hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Predeccessors) ? this.Predeccessors.GetHashCode() : 0);
+                hash = (hash * 23) + (!Object.ReferenceEquals(null, this.PredeccessorsToString) ? this.PredeccessorsToString.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Mode) ? this.Mode.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Value) ? this.Value.GetHashCode() : 0);
                 hash = (hash * 23) + (!Object.ReferenceEquals(null, this.Code) ? this.Code.GetHashCode() : 0);

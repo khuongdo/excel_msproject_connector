@@ -32,7 +32,6 @@ namespace Excel2ProjAddin.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.contextMenuLeft = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmCombine = new System.Windows.Forms.ToolStripMenuItem();
             this.cmAdd = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,9 +39,6 @@ namespace Excel2ProjAddin.Forms
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.btnRefresh = new System.Windows.Forms.Button();
             this.olvTasks = new BrightIdeasSoftware.ObjectListView();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.tbSearch = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.btnDown = new System.Windows.Forms.Button();
@@ -66,8 +62,6 @@ namespace Excel2ProjAddin.Forms
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.olvTasks)).BeginInit();
-            this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.olvCombinedTasks)).BeginInit();
             this.contextMenuRight.SuspendLayout();
@@ -118,7 +112,6 @@ namespace Excel2ProjAddin.Forms
             // 
             this.splitContainer1.Panel1.Controls.Add(this.btnRefresh);
             this.splitContainer1.Panel1.Controls.Add(this.olvTasks);
-            this.splitContainer1.Panel1.Controls.Add(this.panel1);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
             // 
             // splitContainer1.Panel2
@@ -135,7 +128,6 @@ namespace Excel2ProjAddin.Forms
             // 
             this.btnRefresh.BackgroundImage = global::Excel2ProjAddin.Properties.Resources.Refresh_icon;
             this.btnRefresh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnRefresh.Enabled = false;
             this.btnRefresh.Location = new System.Drawing.Point(127, 6);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(33, 30);
@@ -164,41 +156,6 @@ namespace Excel2ProjAddin.Forms
             this.olvTasks.UseFiltering = true;
             this.olvTasks.View = System.Windows.Forms.View.Details;
             // 
-            // panel1
-            // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.Controls.Add(this.pictureBox1);
-            this.panel1.Controls.Add(this.tbSearch);
-            this.panel1.Enabled = false;
-            this.panel1.Location = new System.Drawing.Point(175, 6);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(189, 31);
-            this.panel1.TabIndex = 10;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.ImageLocation = "";
-            this.pictureBox1.Location = new System.Drawing.Point(0, 2);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(28, 24);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 9;
-            this.pictureBox1.TabStop = false;
-            // 
-            // tbSearch
-            // 
-            this.tbSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbSearch.Location = new System.Drawing.Point(31, 6);
-            this.tbSearch.Name = "tbSearch";
-            this.tbSearch.Size = new System.Drawing.Size(155, 20);
-            this.tbSearch.TabIndex = 8;
-            this.tbSearch.TextChanged += new System.EventHandler(this.tbSearch_TextChanged);
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -214,7 +171,6 @@ namespace Excel2ProjAddin.Forms
             | System.Windows.Forms.AnchorStyles.Left)));
             this.panel2.Controls.Add(this.btnDown);
             this.panel2.Controls.Add(this.btnUp);
-            this.panel2.Enabled = false;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
             this.panel2.Name = "panel2";
@@ -289,7 +245,6 @@ namespace Excel2ProjAddin.Forms
             // 
             // cmChoosePredecessor
             // 
-            this.cmChoosePredecessor.Enabled = false;
             this.cmChoosePredecessor.Name = "cmChoosePredecessor";
             this.cmChoosePredecessor.Size = new System.Drawing.Size(169, 22);
             this.cmChoosePredecessor.Text = "Chọn Predecessor";
@@ -398,9 +353,6 @@ namespace Excel2ProjAddin.Forms
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.olvTasks)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.olvCombinedTasks)).EndInit();
             this.contextMenuRight.ResumeLayout(false);
@@ -419,10 +371,7 @@ namespace Excel2ProjAddin.Forms
         private ObjectListView olvCombinedTasks;
         private System.Windows.Forms.ContextMenuStrip contextMenuLeft;
         private System.Windows.Forms.ToolStripMenuItem cmCombine;
-        private System.Windows.Forms.TextBox tbSearch;
         private System.Windows.Forms.ToolStripMenuItem cmAdd;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnRefresh;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Panel panelStep1;

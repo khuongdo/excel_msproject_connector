@@ -33,26 +33,17 @@ namespace ObjectsLibrary
             
             foreach (MSPTask task in Tasks)
             {
-                ExportByTask(PjProject,Tasks,task);
+                ExportByTask(PjProject,task);
             }
 
-            
-
         }
-        public static void ExportByTask(MSProject.Project CurrPj, List<MSPTask> Tasks, MSPTask task)
+        public static void ExportByTask(MSProject.Project CurrPj, MSPTask task)
         {
             MSProject.Task CurrTask = CurrPj.Tasks.Add(task.Name, Type.Missing);
             CurrTask.Duration = task.DurationInDay * 480;
-            if (task.Predeccessors != string.Empty && task.Predeccessors != null)
-            {
-                string[] _predecessorsID = task.Predeccessors.Split(',');
-                List<string> _predecessorsNo = new List<string>();
-                foreach (string id in _predecessorsID)
-                {
-                    _predecessorsNo.Add(Tasks.Single(x => x.ID == Convert.ToInt32(id)).TaskNo.ToString());
-                }
-                CurrTask.Predecessors = _predecessorsNo.Aggregate((i, j) => i + "," + j);
-            }
+            // Predecessors
+            CurrTask.Predecessors = task.PredeccessorsToString;
+
             CurrTask.Notes = task.Code;
             List<MSProject.Resource> CurrResourcesCollection = CurrPj.Resources.Cast<MSProject.Resource>().ToList();
             foreach (MSPResource r in task.Resources)

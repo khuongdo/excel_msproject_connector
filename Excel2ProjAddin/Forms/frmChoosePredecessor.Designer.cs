@@ -38,8 +38,8 @@
             this.olvChoosePredecessor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.olvChoosePredecessor.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.SingleClick;
             this.olvChoosePredecessor.CellEditEnterChangesRows = true;
+            this.olvChoosePredecessor.CheckBoxes = true;
             this.olvChoosePredecessor.FullRowSelect = true;
             this.olvChoosePredecessor.GridLines = true;
             this.olvChoosePredecessor.Location = new System.Drawing.Point(2, 1);
