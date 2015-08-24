@@ -346,7 +346,7 @@ namespace Excel2ProjAddin.Forms
         #region
         private void btnExportPj_Click(object sender, EventArgs e)
         {
-            btnExportPj.Enabled = false;
+            //btnExportPj.Enabled = false;
             List<MSPTask> Tasks = olvCombinedTasks.Objects.Cast<MSPTask>().ToList();
             backgroundWorker_ExportPj.RunWorkerAsync(Tasks);
         }
@@ -402,7 +402,7 @@ namespace Excel2ProjAddin.Forms
 
         private void backgroundWorker_ExportPj_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            btnExportPj.Enabled = true;
+            //btnExportPj.Enabled = true;
         }
         #endregion
 

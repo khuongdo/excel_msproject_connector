@@ -2612,6 +2612,7 @@
 		<col def="I2">Order</col>
 		<col def="I2">ISSetupLocation</col>
 		<col def="S255">ISReleaseFlags</col>
+		<row><td>_A826BF3E_0F6A_4AB6_A761_93257420C8CB_</td><td>Visual Studio 2010 Tools for Office Runtime.prq</td><td/><td/><td/></row>
 	</table>
 
 	<table name="ISSetupType">
