@@ -188,8 +188,8 @@ namespace Excel2ProjAddin.Forms
             if (MessageBox.Show("Bạn có muốn tải lại danh sách công tác?", "Thông báo",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
             {
-                olvCombinedTasks.Items.Clear();
-                olvTasks.Items.Clear();
+                olvCombinedTasks.ClearObjects();
+                olvTasks.ClearObjects();
                 olvTasks.SetObjects(LoadTasks());
             }
         }
@@ -239,13 +239,13 @@ namespace Excel2ProjAddin.Forms
             Form frmChoosePre = (Form)sender;
             ObjectListView olvChoosePre = frmChoosePre.Controls.OfType<ObjectListView>().ToList()[0];
             List<MSPTask> PreTasks = olvChoosePre.CheckedObjects.Cast<MSPTask>().ToList();
-            if (PreTasks == null || PreTasks.Count == 0)
+            if (PreTasks == null)
             {
                 return;
             }
             this.Focus();
             ((MSPTask)olvCombinedTasks.SelectedObject).Predecessors = PreTasks;
-            olvCombinedTasks.RefreshObject(olvCombinedTasks.SelectedObject);
+            olvCombinedTasks.RefreshObjects(olvCombinedTasks.Objects.Cast<MSPTask>().ToList());
         }
 
       
@@ -262,7 +262,10 @@ namespace Excel2ProjAddin.Forms
                 CurrTask.Resources.Single(x => x.Type == ResourceType.Work).Value = CurrTask.Worker;
                 CalculateDuration(ref CurrTask);
             }
-            
+            if (e.Column == olv.GetColumn("STT"))
+            {
+                olv.RefreshObjects(olv.Objects.Cast<MSPTask>().ToList());
+            }
             olv.UpdateObject(CurrTask);
         }
         private void CalculateDuration(ref MSPTask Task)
@@ -373,6 +376,8 @@ namespace Excel2ProjAddin.Forms
                CurrRes.Type = r.Type == ResourceType.Material ? 
                    MSproject.PjResourceTypes.pjResourceTypeMaterial : MSproject.PjResourceTypes.pjResourceTypeWork;
                CurrRes.Initials = r.Code;
+               if (CurrRes.Type == MSproject.PjResourceTypes.pjResourceTypeMaterial)
+                   CurrRes.StandardRate = r.UnitPrice;
             }
             bgwsender.ReportProgress(0, "Đang nạp resource....Hoàn tất");
 

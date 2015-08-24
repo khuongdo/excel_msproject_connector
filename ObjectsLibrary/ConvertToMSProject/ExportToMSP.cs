@@ -33,7 +33,7 @@ namespace ObjectsLibrary
             
             foreach (MSPTask task in Tasks)
             {
-                ExportByTask(PjProject,task);
+               // ExportByTask(PjProject,task);
             }
 
         }
@@ -45,10 +45,13 @@ namespace ObjectsLibrary
             CurrTask.Predecessors = task.PredeccessorsToString;
 
             CurrTask.Notes = task.Code;
-            List<MSProject.Resource> CurrResourcesCollection = CurrPj.Resources.Cast<MSProject.Resource>().ToList();
+            List<MSProject.Resource> ResCollection = CurrPj.Resources.Cast<MSProject.Resource>().ToList();
             foreach (MSPResource r in task.Resources)
             {
-                CurrTask.Assignments.Add(CurrTask.ID, CurrResourcesCollection.Single(x => x.Name == r.Name).ID, Type.Missing);
+                MSProject.Assignment Asg = CurrTask.Assignments.Add(ResourceID: (ResCollection.Single(x => x.Initials == r.Code)).ID);
+                if (r.Type == ResourceType.Work)
+                    continue;
+                Asg.Units = r.Value;           
             }
         }
     }
