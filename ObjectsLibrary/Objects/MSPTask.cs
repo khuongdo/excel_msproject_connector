@@ -28,24 +28,32 @@ namespace ObjectsLibrary
    [Serializable()]
     public class Unit:IComparable<Unit>
     {
+       private int _Factor;
         public string FullName {get;set;}
-        public string Name;
-        public int Factor;
+        public string Name { get; set; }
+     
+        public int Factor
+        {
+            private set { }
+            get
+            {
+                return this._Factor;
+            }
+        }
         public Unit(string _FullName)
         {
+            this.FullName = _FullName;
             try
             {
-                this.FullName = _FullName;
-                Regex rg = new Regex("^[0-9]{1,5}");
-                Factor = Convert.ToInt32(rg.Match(this.FullName).Value);
-                this.Name = _FullName.Remove(0, rg.Match(this.FullName).Length);
+                Regex rg = new Regex(@"(?<factor>\d+)?(\s+)?(?<name>.+)");
+                Match m = rg.Match(this.FullName);
+                this.Name = m.Groups["name"].Value;
+                this._Factor = Convert.ToInt32(m.Groups["factor"].Value);
             }
-            catch
+            catch (FormatException)
             {
-                Factor = 1;
-                this.Name = _FullName;
+                this._Factor = 1;
             }
-           
         }
         public int CompareTo(Unit unitToCompare)
         {
@@ -83,12 +91,18 @@ namespace ObjectsLibrary
         [OLVColumn("Tên công tác",DisplayIndex = 3,Width=200,TextAlign=HorizontalAlignment.Left)]
         public string Name { get; set; }
         public Unit unit { get; set; }
-        [OLVColumn("ĐV",DisplayIndex = 4,Width = 50,TextAlign = HorizontalAlignment.Center,IsEditable = false)]
+        [OLVColumn("ĐV", DisplayIndex = 4, Width = 50, TextAlign = HorizontalAlignment.Center, IsEditable = false)]
 
-        public string UnitDescription { get; set; }
+        public string UnitToString
+        {
+            get
+            {
+                return this.unit.FullName;
+            }
+        }
         [OLVColumn("Khối lượng",DisplayIndex = 5,Width=50,TextAlign=HorizontalAlignment.Left,IsEditable = false)]
         public double Value { get; set; }
-        [OLVColumn("Predecessors", DisplayIndex=6, Width = 100)]
+        [OLVColumn("Công tác trước", DisplayIndex=6, Width = 100)]
         public string PredeccessorsToString
         {
             get
@@ -115,7 +129,7 @@ namespace ObjectsLibrary
             
         }
 
-        [OLVColumn("Nhân công",DisplayIndex = 7,Width = 30,IsEditable = true)]
+        [OLVColumn("Nhân công",DisplayIndex = 7,Width = 50,IsEditable = true)]
         public int Worker { get; set; }
         [OLVColumn("Thời gian (ngày)",DisplayIndex = 8,Width = 50,IsEditable = false)]
         public double DurationInDay { get; set; }

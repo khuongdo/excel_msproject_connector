@@ -50,12 +50,12 @@
             // group1
             // 
             this.group1.Items.Add(this.btnCollectData);
-            this.group1.Label = "Data";
+            this.group1.Label = "Công cụ";
             this.group1.Name = "group1";
             // 
             // btnCollectData
             // 
-            this.btnCollectData.Label = "Collect Data";
+            this.btnCollectData.Label = "Khởi động";
             this.btnCollectData.Name = "btnCollectData";
             this.btnCollectData.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnCollectData_Click);
             // 

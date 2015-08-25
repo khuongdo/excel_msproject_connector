@@ -13,13 +13,14 @@ using System.Reflection;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using MSproject = Microsoft.Office.Interop.MSProject;
+using MSExcel = Microsoft.Office.Interop.Excel;
 using Microsoft.VisualBasic;
 
 namespace Excel2ProjAddin.Forms
 {
     public partial class frmMain : Form
     {
-        public frmMain()
+        public frmMain(MSExcel.Worksheet SheetPTVT)
         {
             Properties.Settings.Default.CombinedTaskList = string.Empty;
             Properties.Settings.Default.TaskList = string.Empty;
@@ -40,7 +41,7 @@ namespace Excel2ProjAddin.Forms
             worker_collectTask.DoWork += worker_collectTask_DoWork;
             worker_collectTask.RunWorkerCompleted += worker_collectTask_RunWorkerCompleted;
             worker_collectTask.ProgressChanged += worker_collectTask_ProgressChanged;
-            worker_collectTask.RunWorkerAsync();
+            worker_collectTask.RunWorkerAsync(SheetPTVT);
         }
 
         void worker_collectTask_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -58,9 +59,10 @@ namespace Excel2ProjAddin.Forms
 
         void worker_collectTask_DoWork(object sender, DoWorkEventArgs e)
         {
+            MSExcel.Worksheet SheetPTVT = (MSExcel.Worksheet)e.Argument;
             BackgroundWorker worker = (BackgroundWorker)sender;
             worker.ReportProgress(1, "Đang tạo danh sách công tác....");
-            e.Result = ExcelModule.CollectTasks();
+            e.Result = ExcelModule.CollectTasks(SheetPTVT);
             worker.ReportProgress(1, "Tải danh sách công tác hoàn tất");
         }
         private void PopulateTaskList()
@@ -180,7 +182,7 @@ namespace Excel2ProjAddin.Forms
             NewTask.ID = olvCombinedTasks.Items.Count;
             NewTask.TaskNo = olvCombinedTasks.Items.Count + 1;
             olvCombinedTasks.AddObject(NewTask);
-            //olvCombinedTasks.UpdateObject(NewTask);
+            olvCombinedTasks.UpdateObject(NewTask);
             
         }
         private void button1_Click(object sender, EventArgs e)
@@ -193,11 +195,6 @@ namespace Excel2ProjAddin.Forms
                 olvTasks.SetObjects(LoadTasks());
             }
         }
-
-       
-
-        
-       
 
         private void cmAdd_Click(object sender, EventArgs e)
         {
@@ -213,8 +210,6 @@ namespace Excel2ProjAddin.Forms
                 newTask.TaskNo = newTask.ID + 1;
                 olvCombinedTasks.AddObject(newTask);
             }
-            
-         
         }
 
         private void cmChoosePredecessor_Click(object sender, EventArgs e)
@@ -248,16 +243,17 @@ namespace Excel2ProjAddin.Forms
             olvCombinedTasks.RefreshObjects(olvCombinedTasks.Objects.Cast<MSPTask>().ToList());
         }
 
-      
-
-       
-
         private void olvCombinedTasks_CellEditFinishing(object sender, CellEditEventArgs e)
         {
             ObjectListView olv = (ObjectListView)sender;
             MSPTask CurrTask = (MSPTask)e.RowObject;
+            
             if (e.Column == olv.GetColumn("Nhân công"))
             {
+                if (!CurrTask.Resources.Exists(x => x.Type == ResourceType.Work))
+                    return;
+                if ((int)e.NewValue < 0)
+                    e.NewValue = 0;
                 CurrTask.Worker = (int)e.NewValue;
                 CurrTask.Resources.Single(x => x.Type == ResourceType.Work).Value = CurrTask.Worker;
                 CalculateDuration(ref CurrTask);
@@ -278,9 +274,31 @@ namespace Excel2ProjAddin.Forms
 
         }
 
-        private void btnGroup_Click(object sender, EventArgs e)
+        private void btnGroupRight_Click(object sender, EventArgs e)
         {
-            olvCombinedTasks.ShowGroups = olvCombinedTasks.ShowGroups == true ? false : true;
+            if (olvCombinedTasks.ShowGroups)
+            {
+                olvCombinedTasks.ShowGroups = false;
+            }
+            else
+            {
+                olvCombinedTasks.ShowGroups = true;
+                olvCombinedTasks.BuildGroups(olvCombinedTasks.AllColumns[2], SortOrder.Ascending);
+                
+            }
+        }
+        private void btnGroupLeft_Click(object sender, EventArgs e)
+        {
+            if (olvTasks.ShowGroups)
+            {
+                olvTasks.ShowGroups = false;
+            }
+            else
+            {
+                olvTasks.ShowGroups = true;
+                olvTasks.BuildGroups(olvCombinedTasks.AllColumns[2], SortOrder.Ascending);
+
+            };
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -303,13 +321,15 @@ namespace Excel2ProjAddin.Forms
             olvCombinedTasks.MoveObjects(olvCombinedTasks.SelectedIndex - 1, new object[]{selected_obj});
             olvCombinedTasks.Focus();
             olvCombinedTasks.EnsureModelVisible(selected_obj);
-            olvCombinedTasks.Refresh();
+            olvCombinedTasks.RefreshObjects(olvCombinedTasks.Objects.Cast<MSPTask>().ToList());
             olvCombinedTasks.SelectObject(selected_obj);
         }
 
         private void btnDown_Click(object sender, EventArgs e)
         {
-            if (olvCombinedTasks.SelectedIndex == -1 || olvCombinedTasks.SelectedIndex == olvCombinedTasks.Items.Count - 1)
+            // if nothing is selected or last item is selected
+            if (olvCombinedTasks.SelectedIndex == -1 || 
+                olvCombinedTasks.SelectedIndex == olvCombinedTasks.Items.Count - 1)
                 return;
             var selected_obj = olvCombinedTasks.SelectedObject;
             var next_obj = olvCombinedTasks.GetModelObject(olvCombinedTasks.SelectedIndex + 1);
@@ -321,7 +341,7 @@ namespace Excel2ProjAddin.Forms
             olvCombinedTasks.MoveObjects(olvCombinedTasks.SelectedIndex, new object[] { next_obj });
             olvCombinedTasks.Focus();
             olvCombinedTasks.EnsureModelVisible(next_obj);
-            olvCombinedTasks.RefreshObjects(new object[] {next_obj,selected_obj});
+            olvCombinedTasks.RefreshObjects(olvCombinedTasks.Objects.Cast<MSPTask>().ToList());
             olvCombinedTasks.SelectObject(selected_obj);
         }
         #endregion
@@ -376,8 +396,10 @@ namespace Excel2ProjAddin.Forms
                CurrRes.Type = r.Type == ResourceType.Material ? 
                    MSproject.PjResourceTypes.pjResourceTypeMaterial : MSproject.PjResourceTypes.pjResourceTypeWork;
                CurrRes.Initials = r.Code;
-               if (CurrRes.Type == MSproject.PjResourceTypes.pjResourceTypeMaterial)
-                   CurrRes.StandardRate = r.UnitPrice;
+               CurrRes.StandardRate = r.Type == ResourceType.Material ? r.UnitPrice : r.UnitPrice / 8;
+               if (r.Type == ResourceType.Work)
+                   continue;
+               CurrRes.MaterialLabel = r.Unit;
             }
             bgwsender.ReportProgress(0, "Đang nạp resource....Hoàn tất");
 
@@ -410,6 +432,8 @@ namespace Excel2ProjAddin.Forms
             //btnExportPj.Enabled = true;
         }
         #endregion
+
+        
 
        
 

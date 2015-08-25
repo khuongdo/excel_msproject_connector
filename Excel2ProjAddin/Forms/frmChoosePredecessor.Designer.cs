@@ -71,7 +71,7 @@
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.olvChoosePredecessor);
             this.Name = "frmChoosePredecessor";
-            this.Text = "Chọn Predecessor";
+            this.Text = "Chọn công tác trước";
             ((System.ComponentModel.ISupportInitialize)(this.olvChoosePredecessor)).EndInit();
             this.ResumeLayout(false);
 

@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Office.Tools.Ribbon;
 using System.ComponentModel;
 using System.Windows.Forms;
+using MSExcel = Microsoft.Office.Interop.Excel;
 
 
 namespace Excel2ProjAddin
@@ -19,7 +20,19 @@ namespace Excel2ProjAddin
 
         private void btnCollectData_Click(object sender, RibbonControlEventArgs e)
         {
-            Forms.frmMain f = new Forms.frmMain();
+            MSExcel.Application xlApp = Globals.ThisAddIn.Application;
+            MSExcel.Worksheet xlWS;
+            try
+            {
+                xlWS = xlApp.Sheets.get_Item("PTVT");
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Không tìm thấy sheet PTVT", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            Forms.frmMain f = new Forms.frmMain(xlWS);
             f.Show();
         }
        

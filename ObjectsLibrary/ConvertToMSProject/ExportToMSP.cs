@@ -39,16 +39,21 @@ namespace ObjectsLibrary
         }
         public static void ExportByTask(MSProject.Project CurrPj, MSPTask task)
         {
-            MSProject.Task CurrTask = CurrPj.Tasks.Add(task.Name, Type.Missing);
+            //List<MSProject.Task> Tasks = CurrPj.Tasks.Cast<MSProject.Task>().ToList();
+            MSProject.Task CurrTask;
+            //if (!Tasks.Exists(x => x.ID == task.TaskNo))
+                CurrTask = CurrPj.Tasks.Add(task.Name, Type.Missing);
+            //else
+           //     CurrTask = Tasks.Single(x => x.ID == task.TaskNo);
             CurrTask.Duration = task.DurationInDay * 480;
             // Predecessors
             CurrTask.Predecessors = task.PredeccessorsToString;
-
+            CurrTask.Manual = task.Mode == TaskMode.ManuallySchedule ? true : false;
             CurrTask.Notes = task.Code;
             List<MSProject.Resource> ResCollection = CurrPj.Resources.Cast<MSProject.Resource>().ToList();
             foreach (MSPResource r in task.Resources)
             {
-                MSProject.Assignment Asg = CurrTask.Assignments.Add(ResourceID: (ResCollection.Single(x => x.Initials == r.Code)).ID);
+                MSProject.Assignment Asg = CurrTask.Assignments.Add(ResourceID: (ResCollection.Single(x => x.Initials == r.Code && x.Name == r.Name)).ID);
                 if (r.Type == ResourceType.Work)
                     continue;
                 Asg.Units = r.Value;           

@@ -42,28 +42,38 @@ namespace ObjectsLibrary
             MSPTask NewTask = new MSPTask();
             //Task Name
             NewTask.Name = NewName;
-            //Combine task value multiply with unit factor
-            Array.ForEach(Tasks, x => NewTask.Value += x.Value * x.unit.Factor);
-            //Combine Task ID
-            NewTask.Code = Tasks.Select(i => i.Code).Aggregate((i, j) => i + "+" + j);
-            //Task No
-            NewTask.TaskNo = 1;
-            //duration
-            Array.ForEach(Tasks, x => NewTask.DurationInDay += x.DurationInDay);
-            //Predeccessors
-            
+
             //Combine Unit
             List<Unit> UnitFactorList = new List<Unit>();
             Array.ForEach(Tasks, x => UnitFactorList.Add(x.unit));
             NewTask.unit = UnitFactorList.Min();
-            NewTask.UnitDescription = NewTask.unit.FullName;
+
+            //Combine task value multiply with unit factor
+            List<string> UnitListInString = new List<string>();
+            UnitFactorList.ForEach(x => UnitListInString.Add(x.FullName));
+            if (UnitListInString.Distinct().Count() > 1)
+                Array.ForEach(Tasks, x => NewTask.Value += x.Value * x.unit.Factor);
+            else
+                Array.ForEach(Tasks, x => NewTask.Value += x.Value);
+            
+            //Combine Task Code
+            NewTask.Code = Tasks.Select(i => i.Code).Aggregate((i, j) => i + "+" + j);
+            
+            //duration
+            Array.ForEach(Tasks, x => NewTask.DurationInDay += x.DurationInDay);
+            
+            
+            
+            
+            //NewTask.UnitToString = NewTask.unit.FullName;
             //Combine Resources
             List<MSPResource> newResources = new List<MSPResource>();
             foreach (MSPTask T in Tasks)
             {
                 T.Resources.ForEach(x => newResources.Add(x));
             }
-            MergeResources(newResources).ForEach(x => NewTask.AddResource(x));
+            NewTask.Resources =  MergeResources(newResources);
+
             return NewTask;
         }
         private static List<MSPResource> MergeResources(List<MSPResource> ResourceList)
@@ -91,6 +101,7 @@ namespace ObjectsLibrary
                         NewResources.Add(TempList[0]);
                     else
                     {
+                        
                         MSPResource tempResource = new MSPResource();
                         tempResource.Code = TempList[0].Code;
                         double sumTaskWaste_x_Assess = 0;
@@ -103,7 +114,17 @@ namespace ObjectsLibrary
                         }
                         tempResource.Assess = Math.Round(sumTaskWaste_x_Assess / sumTaskWaste,5);
                         tempResource.Unit = TempList[0].Unit;
-                        tempResource.UnitPrice = TempList[0].UnitPrice;
+
+                        // if resource unit contain % character
+                        if (TempList[0].Unit.Contains("%"))
+                        {
+                            double SumCost = 0;
+                            TempList.ForEach(x => SumCost += x.TotalCost);
+                            tempResource.UnitPrice = SumCost / TempList.Count;
+                        }
+                        else
+                            tempResource.UnitPrice = TempList[0].UnitPrice;
+
                         tempResource.Name = TempList[0].Name;
                         tempResource.Type = ResourceType.Material;
                         NewResources.Add(tempResource);
@@ -116,7 +137,7 @@ namespace ObjectsLibrary
             Merge_Work_Resource: //label
             List<MSPResource> WorkResources = ResourceList.Where(x => x.Type == ResourceType.Work).ToList();
             if (WorkResources.Count == 0 || WorkResources == null)
-                return null;
+                goto end;
             else if (WorkResources.Count == 1)
                 NewResources.Add(WorkResources[0]);
             else
@@ -149,6 +170,8 @@ namespace ObjectsLibrary
                 tempResource.Type = ResourceType.Work;
                 NewResources.Add(tempResource);
             }
+
+            end:
             return NewResources;
 
         }

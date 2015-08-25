@@ -29,9 +29,12 @@ namespace ObjectsLibrary
         public string Unit { get; set; }
         [OLVColumn("Khối lượng",DisplayIndex = 5,Width = 50)]
         public decimal Value { get; set; }
-        
-        public double TaskWaste;
-        public int UnitPrice;
+        [OLVColumn(IsVisible = false)]
+        public double TaskWaste { get; set; }
+        [OLVColumn("Đơn giá",DisplayIndex = 6, Width = 100)]
+        public double UnitPrice { get; set; }
+        [OLVColumn("Thành tiền",DisplayIndex = 7, Width = 150)]
+        public double TotalCost { get; set; }
         #region # CONSTRUCTOR
         public MSPResource(string _ID,string _Name, decimal _Value, string _Unit,double _Assess,int _UnitPrice, ResourceType _Type)
         {
