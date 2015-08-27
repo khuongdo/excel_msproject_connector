@@ -45,7 +45,7 @@ namespace ObjectsLibrary
                 CurrTask = CurrPj.Tasks.Add(task.Name, Type.Missing);
             //else
            //     CurrTask = Tasks.Single(x => x.ID == task.TaskNo);
-            CurrTask.Duration = task.DurationInDay * 480;
+            
             // Predecessors
             CurrTask.Predecessors = task.PredeccessorsToString;
             CurrTask.Manual = task.Mode == TaskMode.ManuallySchedule ? true : false;
@@ -66,6 +66,7 @@ namespace ObjectsLibrary
                     continue;
                 }
             }
+            CurrTask.Duration = task.DurationInDay * 480;
         }
     }
 }
