@@ -4360,9 +4360,9 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>PROGMSG_IIS_ROLLBACKAPPPOOLS</td><td>##IDS_PROGMSG_IIS_ROLLBACKAPPPOOLS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
-		<row><td>ProductCode</td><td>{1F7D69EC-EECB-4F08-ABA4-359689D4BD73}</td><td/></row>
+		<row><td>ProductCode</td><td>{D0AC02A8-AF89-4D35-9F34-1F65635821BC}</td><td/></row>
 		<row><td>ProductName</td><td>Excel to Project Add in</td><td/></row>
-		<row><td>ProductVersion</td><td>1.0.1.1</td><td/></row>
+		<row><td>ProductVersion</td><td>1.0.1.2</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
 		<row><td>ProgressType2</td><td>installed</td><td/></row>
