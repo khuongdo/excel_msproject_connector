@@ -25,7 +25,7 @@ namespace Excel2ProjAddin.Forms
             Properties.Settings.Default.CombinedTaskList = string.Empty;
             Properties.Settings.Default.TaskList = string.Empty;
             InitializeComponent();
-
+            this.Text = "E2P Add-in v" + Assembly.GetExecutingAssembly().GetName().Version;
             //Panel
             panelStep1.Visible = true;
             //panelStep2.Visible = false;
@@ -51,10 +51,14 @@ namespace Excel2ProjAddin.Forms
 
         void worker_collectTask_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            List<MSPTask> Tasks = (List<MSPTask>)e.Result;
-            olvTasks.Enabled = true;
-            olvTasks.SetObjects(Tasks);
-            SaveTasks(olvTasks.Objects.Cast<MSPTask>().ToList());
+            try
+            {
+                List<MSPTask> Tasks = (List<MSPTask>)e.Result;
+                olvTasks.Enabled = true;
+                olvTasks.SetObjects(Tasks);
+                SaveTasks(olvTasks.Objects.Cast<MSPTask>().ToList());
+            }
+            catch { }
         }
 
         void worker_collectTask_DoWork(object sender, DoWorkEventArgs e)
@@ -399,7 +403,9 @@ namespace Excel2ProjAddin.Forms
                CurrRes.StandardRate = r.Type == ResourceType.Material ? r.UnitPrice : r.UnitPrice / 8;
                if (r.Type == ResourceType.Work)
                    continue;
+
                CurrRes.MaterialLabel = r.Unit;
+               //CurrRes.MaxUnits = 99000000m;
             }
             bgwsender.ReportProgress(0, "Đang nạp resource....Hoàn tất");
 
@@ -432,6 +438,8 @@ namespace Excel2ProjAddin.Forms
             //btnExportPj.Enabled = true;
         }
         #endregion
+
+       
 
         
 

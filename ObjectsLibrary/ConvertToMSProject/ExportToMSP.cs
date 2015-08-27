@@ -53,10 +53,18 @@ namespace ObjectsLibrary
             List<MSProject.Resource> ResCollection = CurrPj.Resources.Cast<MSProject.Resource>().ToList();
             foreach (MSPResource r in task.Resources)
             {
-                MSProject.Assignment Asg = CurrTask.Assignments.Add(ResourceID: (ResCollection.Single(x => x.Initials == r.Code && x.Name == r.Name)).ID);
-                if (r.Type == ResourceType.Work)
+                try
+                {
+                    MSProject.Assignment Asg = CurrTask.Assignments.Add(ResourceID: (ResCollection.Single(x => x.Initials == r.Code && x.Name == r.Name)).ID);
+                    if (r.Type == ResourceType.Work)
+                        Asg.Units = task.Worker;
+                    else
+                        Asg.Units = r.Value;
+                }
+                catch
+                {
                     continue;
-                Asg.Units = r.Value;           
+                }
             }
         }
     }

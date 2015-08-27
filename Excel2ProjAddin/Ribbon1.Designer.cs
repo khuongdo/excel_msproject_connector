@@ -37,13 +37,18 @@
             this.tab1 = this.Factory.CreateRibbonTab();
             this.group1 = this.Factory.CreateRibbonGroup();
             this.btnCollectData = this.Factory.CreateRibbonButton();
+            this.group2 = this.Factory.CreateRibbonGroup();
+            this.btnInfo = this.Factory.CreateRibbonButton();
+            this.button1 = this.Factory.CreateRibbonButton();
             this.tab1.SuspendLayout();
             this.group1.SuspendLayout();
+            this.group2.SuspendLayout();
             // 
             // tab1
             // 
             this.tab1.ControlId.ControlIdType = Microsoft.Office.Tools.Ribbon.RibbonControlIdType.Office;
             this.tab1.Groups.Add(this.group1);
+            this.tab1.Groups.Add(this.group2);
             this.tab1.Label = "E2P";
             this.tab1.Name = "tab1";
             // 
@@ -57,7 +62,29 @@
             // 
             this.btnCollectData.Label = "Khởi động";
             this.btnCollectData.Name = "btnCollectData";
+            this.btnCollectData.ScreenTip = "Khởi động phần mềm";
             this.btnCollectData.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnCollectData_Click);
+            // 
+            // group2
+            // 
+            this.group2.Items.Add(this.btnInfo);
+            this.group2.Items.Add(this.button1);
+            this.group2.Label = "Trợ giúp";
+            this.group2.Name = "group2";
+            // 
+            // btnInfo
+            // 
+            this.btnInfo.Label = "Thông tin";
+            this.btnInfo.Name = "btnInfo";
+            this.btnInfo.ScreenTip = "Hiển thị thông tin";
+            this.btnInfo.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnInfo_Click);
+            // 
+            // button1
+            // 
+            this.button1.Label = "Báo lỗi";
+            this.button1.Name = "button1";
+            this.button1.ScreenTip = "Báo lỗi và yêu cầu tính năng mới";
+            this.button1.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.button1_Click);
             // 
             // Ribbon1
             // 
@@ -69,6 +96,8 @@
             this.tab1.PerformLayout();
             this.group1.ResumeLayout(false);
             this.group1.PerformLayout();
+            this.group2.ResumeLayout(false);
+            this.group2.PerformLayout();
 
         }
 
@@ -77,6 +106,9 @@
         internal Microsoft.Office.Tools.Ribbon.RibbonTab tab1;
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup group1;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btnCollectData;
+        internal Microsoft.Office.Tools.Ribbon.RibbonGroup group2;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton btnInfo;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton button1;
     }
 
     partial class ThisRibbonCollection

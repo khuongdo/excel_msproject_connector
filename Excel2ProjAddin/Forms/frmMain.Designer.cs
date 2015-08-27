@@ -37,6 +37,7 @@ namespace Excel2ProjAddin.Forms
             this.cmAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.resourcesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.btnGroupLeft = new System.Windows.Forms.Button();
             this.btnRefresh = new System.Windows.Forms.Button();
             this.olvTasks = new BrightIdeasSoftware.ObjectListView();
             this.label1 = new System.Windows.Forms.Label();
@@ -56,7 +57,6 @@ namespace Excel2ProjAddin.Forms
             this.btnExit = new System.Windows.Forms.Button();
             this.btnExportPj = new System.Windows.Forms.Button();
             this.backgroundWorker_ExportPj = new System.ComponentModel.BackgroundWorker();
-            this.btnGroupLeft = new System.Windows.Forms.Button();
             this.contextMenuLeft.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -126,6 +126,17 @@ namespace Excel2ProjAddin.Forms
             this.splitContainer1.SplitterDistance = 369;
             this.splitContainer1.TabIndex = 8;
             // 
+            // btnGroupLeft
+            // 
+            this.btnGroupLeft.BackgroundImage = global::Excel2ProjAddin.Properties.Resources.images;
+            this.btnGroupLeft.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnGroupLeft.Location = new System.Drawing.Point(166, 6);
+            this.btnGroupLeft.Name = "btnGroupLeft";
+            this.btnGroupLeft.Size = new System.Drawing.Size(31, 29);
+            this.btnGroupLeft.TabIndex = 13;
+            this.btnGroupLeft.UseVisualStyleBackColor = true;
+            this.btnGroupLeft.Click += new System.EventHandler(this.btnGroupLeft_Click);
+            // 
             // btnRefresh
             // 
             this.btnRefresh.BackgroundImage = global::Excel2ProjAddin.Properties.Resources.Refresh_icon;
@@ -151,7 +162,7 @@ namespace Excel2ProjAddin.Forms
             this.olvTasks.Name = "olvTasks";
             this.olvTasks.OwnerDraw = true;
             this.olvTasks.ShowGroups = false;
-            this.olvTasks.Size = new System.Drawing.Size(368, 322);
+            this.olvTasks.Size = new System.Drawing.Size(368, 319);
             this.olvTasks.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.olvTasks.TabIndex = 11;
             this.olvTasks.UseCompatibleStateImageBehavior = false;
@@ -176,7 +187,7 @@ namespace Excel2ProjAddin.Forms
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(38, 360);
+            this.panel2.Size = new System.Drawing.Size(38, 357);
             this.panel2.TabIndex = 11;
             // 
             // btnDown
@@ -184,7 +195,7 @@ namespace Excel2ProjAddin.Forms
             this.btnDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.btnDown.BackgroundImage = global::Excel2ProjAddin.Properties.Resources._1439670537_arrow_full_down;
             this.btnDown.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnDown.Location = new System.Drawing.Point(3, 175);
+            this.btnDown.Location = new System.Drawing.Point(3, 180);
             this.btnDown.Name = "btnDown";
             this.btnDown.Size = new System.Drawing.Size(32, 32);
             this.btnDown.TabIndex = 11;
@@ -196,7 +207,7 @@ namespace Excel2ProjAddin.Forms
             this.btnUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.btnUp.BackgroundImage = global::Excel2ProjAddin.Properties.Resources._1439670530_arrow_full_up;
             this.btnUp.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnUp.Location = new System.Drawing.Point(2, 129);
+            this.btnUp.Location = new System.Drawing.Point(2, 134);
             this.btnUp.Name = "btnUp";
             this.btnUp.Size = new System.Drawing.Size(33, 32);
             this.btnUp.TabIndex = 10;
@@ -219,8 +230,9 @@ namespace Excel2ProjAddin.Forms
             this.olvCombinedTasks.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.olvCombinedTasks.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.DoubleClick;
+            this.olvCombinedTasks.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.SingleClick;
             this.olvCombinedTasks.CellEditEnterChangesRows = true;
+            this.olvCombinedTasks.CellEditTabChangesRows = true;
             this.olvCombinedTasks.ContextMenuStrip = this.contextMenuRight;
             this.olvCombinedTasks.FullRowSelect = true;
             this.olvCombinedTasks.GridLines = true;
@@ -230,7 +242,7 @@ namespace Excel2ProjAddin.Forms
             this.olvCombinedTasks.Name = "olvCombinedTasks";
             this.olvCombinedTasks.SelectColumnsOnRightClickBehaviour = BrightIdeasSoftware.ObjectListView.ColumnSelectBehaviour.Submenu;
             this.olvCombinedTasks.ShowGroups = false;
-            this.olvCombinedTasks.Size = new System.Drawing.Size(403, 323);
+            this.olvCombinedTasks.Size = new System.Drawing.Size(403, 320);
             this.olvCombinedTasks.TabIndex = 0;
             this.olvCombinedTasks.UseCompatibleStateImageBehavior = false;
             this.olvCombinedTasks.View = System.Windows.Forms.View.Details;
@@ -339,17 +351,6 @@ namespace Excel2ProjAddin.Forms
             this.backgroundWorker_ExportPj.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_ExportPj_DoWork);
             this.backgroundWorker_ExportPj.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ExportPj_ProgressChanged);
             this.backgroundWorker_ExportPj.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_ExportPj_RunWorkerCompleted);
-            // 
-            // btnGroupLeft
-            // 
-            this.btnGroupLeft.BackgroundImage = global::Excel2ProjAddin.Properties.Resources.images;
-            this.btnGroupLeft.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnGroupLeft.Location = new System.Drawing.Point(166, 6);
-            this.btnGroupLeft.Name = "btnGroupLeft";
-            this.btnGroupLeft.Size = new System.Drawing.Size(31, 29);
-            this.btnGroupLeft.TabIndex = 13;
-            this.btnGroupLeft.UseVisualStyleBackColor = true;
-            this.btnGroupLeft.Click += new System.EventHandler(this.btnGroupLeft_Click);
             // 
             // frmMain
             // 
